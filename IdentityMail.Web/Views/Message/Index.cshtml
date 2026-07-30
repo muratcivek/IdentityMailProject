@@ -1,5 +1,319 @@
-﻿<h1>Giriş Başarılı</h1>
+﻿@model List<UserMessage>
 
-<a href="/Auth/Logout" class="btn btn-danger">
-    Çıkış Yap
-</a>
+@{
+    ViewData["Title"] = "Gelen Kutusu";
+}
+
+<style>
+
+    body {
+        background: #eef3f8;
+    }
+
+    .mail-container {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 25px;
+        margin-top: 35px;
+    }
+
+    .sidebar {
+        background: #fff;
+        border-radius: 18px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.08);
+        height: fit-content;
+    }
+
+    .compose-btn {
+        width: 100%;
+        border-radius: 14px;
+        padding: 13px;
+        font-weight: 600;
+        margin-bottom: 25px;
+    }
+
+    .menu-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 15px;
+        border-radius: 12px;
+        text-decoration: none;
+        color: #495057;
+        margin-bottom: 8px;
+        transition: .2s;
+    }
+
+        .menu-item:hover {
+            background: #edf4ff;
+            color: #2563eb;
+        }
+
+        .menu-item.active {
+            background: #2563eb;
+            color: white;
+        }
+
+    .mail-panel {
+        background: white;
+        border-radius: 18px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.08);
+        overflow: hidden;
+    }
+
+    .mail-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 25px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .search {
+        width: 320px;
+        border-radius: 30px;
+    }
+
+    .mail-row {
+        display: flex;
+        align-items: center;
+        padding: 20px 25px;
+        border-bottom: 1px solid #f3f3f3;
+        transition: .25s;
+    }
+
+        .mail-row:hover {
+            background: #f8fbff;
+        }
+
+    .mail-avatar {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #2563eb;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        font-weight: bold;
+        margin-right: 18px;
+    }
+
+    .mail-content {
+        flex: 1;
+    }
+
+        .mail-content h6 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+    .mail-subject {
+        color: #1f3c88;
+        font-weight: 600;
+        margin-top: 3px;
+    }
+
+    .mail-preview {
+        color: #6c757d;
+        margin-top: 5px;
+    }
+
+    .mail-right {
+        text-align: right;
+        width: 170px;
+    }
+
+    .mail-date {
+        color: #6c757d;
+        font-size: 14px;
+    }
+
+    .actions {
+        margin-top: 10px;
+    }
+
+        .actions a {
+            margin-left: 5px;
+        }
+
+    .unread {
+        border-left: 5px solid #2563eb;
+        background: #fbfdff;
+    }
+
+    .empty {
+        padding: 80px;
+        text-align: center;
+    }
+
+</style>
+
+<div class="mail-container">
+
+    <div class="sidebar">
+
+        <a asp-action="SendMail"
+           class="btn btn-primary compose-btn">
+
+            ✉ Yeni Mesaj
+
+        </a>
+
+        <a href="#" class="menu-item active">
+
+            📥 Gelen Kutusu
+
+            <span class="badge bg-light text-dark">
+
+                @Model.Count
+
+            </span>
+
+        </a>
+
+        <a href="#" class="menu-item">
+
+            📤 Gönderilenler
+
+        </a>
+
+        <a href="#" class="menu-item">
+
+            ⭐ Önemliler
+
+        </a>
+
+        <a href="#" class="menu-item">
+
+            🗑 Çöp Kutusu
+
+        </a>
+
+        <hr />
+
+        <div class="text-center">
+
+            <strong>@ViewBag.fullName</strong>
+
+            <br />
+
+            <a asp-controller="Auth"
+               asp-action="Logout"
+               class="btn btn-outline-danger btn-sm mt-3">
+
+                Çıkış Yap
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="mail-panel">
+
+        <div class="mail-toolbar">
+
+            <h4 class="mb-0">
+
+                Gelen Kutusu
+
+            </h4>
+
+            <input class="form-control search"
+                   placeholder="Mesajlarda ara..." />
+
+        </div>
+
+        @if (Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+
+                <div class="mail-row @(item.IsRead ? "" : "unread")">
+
+                    <div class="mail-avatar">
+
+                        @(item.Sender.FirstName[0])
+
+                    </div>
+
+                    <div class="mail-content">
+
+                        <h6>
+
+                            @item.Sender.FirstName
+
+                            @item.Sender.LastName
+
+                        </h6>
+
+                        <div class="mail-subject">
+
+                            @item.Subject
+
+                        </div>
+
+                        <div class="mail-preview">
+
+                            @(item.Body.Length > 90
+                            ? item.Body.Substring(0, 90) + "..."
+                            : item.Body)
+
+                        </div>
+
+                    </div>
+
+                    <div class="mail-right">
+
+                        <div class="mail-date">
+
+                            @item.SendDate.ToString("dd.MM.yyyy")
+
+                        </div>
+
+                        <div class="actions">
+
+                            <a asp-action="Detail"
+                               asp-route-id="@item.Id"
+                               class="btn btn-sm btn-outline-primary">
+
+                                Gör
+
+                            </a>
+
+                            <a asp-action="Delete"
+                               asp-route-id="@item.Id"
+                               onclick="return confirm('Silinsin mi?')"
+                               class="btn btn-sm btn-outline-danger">
+
+                                Sil
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            }
+        }
+        else
+        {
+
+            <div class="empty">
+
+                <h3>📭</h3>
+
+                <h4>Henüz mesaj bulunmuyor.</h4>
+
+            </div>
+
+        }
+
+    </div>
+
+</div>

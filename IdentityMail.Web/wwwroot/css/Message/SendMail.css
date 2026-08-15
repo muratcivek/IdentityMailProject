@@ -111,21 +111,29 @@ body {
 }
 
 .sidebar-bottom {
-    margin-top: auto;
-    padding-top: 17px;
+    margin-top: 32px;
+    padding-top: 18px;
     border-top: 1px solid #edf0f3;
 }
 
 .logout-button {
     height: 43px;
     padding: 0 12px;
+    border-radius: 8px;
     color: #b42318;
     text-decoration: none;
     display: flex;
     align-items: center;
     gap: 10px;
     font-size: 12px;
+    font-weight: 600;
+    transition: .2s ease;
 }
+
+    .logout-button:hover {
+        background: #fff1f0;
+        color: #b42318;
+    }
 
 .content {
     flex: 1;

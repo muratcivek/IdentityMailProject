@@ -1,10 +1,13 @@
 ﻿@{
-    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    var currentController =
+        ViewContext.RouteData.Values["controller"]?.ToString();
+
+    var currentAction =
+        ViewContext.RouteData.Values["action"]?.ToString();
 
     var fullName = ViewBag.fullName?.ToString();
     var profileImage = ViewBag.profileImage?.ToString();
 }
-
 <aside class="sidebar">
 
     <div class="sidebar-profile">
@@ -130,13 +133,15 @@
 
     <a asp-controller="Message"
        asp-action="MyReports"
-       class="menu-item">
+       class="menu-item @(currentAction == "MyReports" ? "active" : "")">
 
         <i class="bi bi-flag"></i>
-        <span>Şikayetlerim</span>
+
+        <span>
+            Şikayetlerim
+        </span>
 
     </a>
-
 
     <a asp-controller="Message"
        asp-action="Trash"
@@ -188,9 +193,14 @@
 
         <a asp-controller="Admin"
            asp-action="PasswordResetRequests"
-           class="menu-item">
+           class="menu-item @(
+           currentController == "Admin" &&
+           (currentAction == "PasswordResetRequests" ||
+            currentAction == "ResetUserPassword")
+               ? "active"
+               : "")">
 
-            <i class="bi bi-key"></i>
+        <i class="bi bi-key"></i>
 
             <span>
                 Şifre Talepleri

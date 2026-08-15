@@ -191,8 +191,8 @@ body {
 /* LOGOUT */
 
 .sidebar-bottom {
-    margin-top: auto;
-    padding-top: 17px;
+    margin-top: 32px;
+    padding-top: 18px;
     border-top: 1px solid #edf0f3;
 }
 
@@ -207,12 +207,13 @@ body {
     gap: 10px;
     font-size: 12px;
     font-weight: 600;
+    transition: .2s ease;
 }
 
     .logout-button:hover {
         background: #fff1f0;
+        color: #b42318;
     }
-
 
 /* CONTENT */
 

@@ -1,0 +1,628 @@
+﻿@using IdentityMail.Web.DTOs.AdminDtos
+@model AdminDashboardDto
+
+@{
+    ViewData["Title"] = "Admin Paneli";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/Admin/Index.css"
+          asp-append-version="true" />
+}
+
+<div class="admin-layout">
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+    <aside class="admin-sidebar">
+
+        <!-- BRAND -->
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+                <i class="bi bi-shield-check"></i>
+            </div>
+
+            <div class="brand-text">
+                <strong>Identity Mail</strong>
+                <span>Yönetim Paneli</span>
+            </div>
+
+        </div>
+
+
+        <!-- ADMIN PROFILE -->
+        <div class="admin-profile">
+
+            <div class="admin-avatar">
+
+                @{
+                    var adminFullName = ViewBag.fullName?.ToString();
+
+                    if (!string.IsNullOrWhiteSpace(adminFullName))
+                    {
+                        @adminFullName.Substring(0, 1).ToUpper()
+                    }
+                    else
+                    {
+                        <span>A</span>
+                    }
+                }
+
+            </div>
+
+            <div class="admin-profile-info">
+
+                <strong>
+                    @(ViewBag.fullName ?? "Yönetici")
+                </strong>
+
+                <span>
+                    Sistem Yöneticisi
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- MANAGEMENT -->
+        <div class="sidebar-section-title">
+            YÖNETİM
+        </div>
+
+        <nav class="sidebar-menu">
+
+            <a asp-controller="Admin"
+               asp-action="Index"
+               class="sidebar-link active">
+
+                <i class="bi bi-grid-1x2"></i>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <a asp-controller="Admin"
+               asp-action="Users"
+               class="sidebar-link">
+
+                <i class="bi bi-people"></i>
+
+                <span>
+                    Kullanıcı Yönetimi
+                </span>
+
+            </a>
+
+            <a asp-controller="Admin"
+               asp-action="Roles"
+               class="sidebar-link">
+
+                <i class="bi bi-shield-lock"></i>
+
+                <span>
+                    Rol Yönetimi
+                </span>
+
+            </a>
+
+
+            <a asp-controller="Admin"
+               asp-action="Reports"
+               class="sidebar-link">
+
+                <i class="bi bi-flag"></i>
+
+                <span>
+                    Şikayetler
+                </span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- APPLICATION -->
+        <div class="sidebar-section-title application-title">
+            UYGULAMA
+        </div>
+
+        <nav class="sidebar-menu">
+
+            <a asp-controller="Message"
+               asp-action="Index"
+               class="sidebar-link">
+
+                <i class="bi bi-envelope"></i>
+
+                <span>
+                    Mesajlara Dön
+                </span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- LOGOUT -->
+        <div class="sidebar-bottom">
+
+            <a asp-controller="Auth"
+               asp-action="Logout"
+               class="logout-link">
+
+                <i class="bi bi-box-arrow-right"></i>
+
+                <span>
+                    Oturumu Kapat
+                </span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
+    <main class="admin-content">
+
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+        <header class="page-header">
+
+            <div class="page-title">
+
+                <span class="page-label">
+                    YÖNETİM PANELİ
+                </span>
+
+                <h1>
+                    Genel Bakış
+                </h1>
+
+                <p>
+                    Identity Mail sisteminin güncel kullanım istatistiklerini
+                    görüntüleyin.
+                </p>
+
+            </div>
+
+
+            <div class="current-date">
+
+                <i class="bi bi-calendar3"></i>
+
+                <span>
+                    @DateTime.Now.ToString("dd.MM.yyyy")
+                </span>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             STATISTICS
+        ================================================== -->
+        <section class="stats-grid">
+
+
+            <!-- TOTAL USERS -->
+            <article class="stat-card">
+
+                <div class="stat-card-header">
+
+                    <div class="stat-icon users-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+
+                    <span class="stat-name">
+                        Toplam Kullanıcı
+                    </span>
+
+                </div>
+
+                <div class="stat-value">
+                    @Model.TotalUsers
+                </div>
+
+                <div class="stat-description active-description">
+
+                    <span class="active-dot"></span>
+
+                    <span>
+                        @Model.ActiveUsers aktif kullanıcı
+                    </span>
+
+                </div>
+
+            </article>
+
+
+            <!-- TOTAL MESSAGES -->
+            <article class="stat-card">
+
+                <div class="stat-card-header">
+
+                    <div class="stat-icon messages-icon">
+                        <i class="bi bi-envelope"></i>
+                    </div>
+
+                    <span class="stat-name">
+                        Toplam Mesaj
+                    </span>
+
+                </div>
+
+                <div class="stat-value">
+                    @Model.TotalMessages
+                </div>
+
+                <div class="stat-description">
+
+                    <i class="bi bi-send"></i>
+
+                    <span>
+                        Sistem üzerinden gönderilen
+                    </span>
+
+                </div>
+
+            </article>
+
+
+            <!-- TODAY -->
+            <article class="stat-card">
+
+                <div class="stat-card-header">
+
+                    <div class="stat-icon today-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+
+                    <span class="stat-name">
+                        Bugün Gönderilen
+                    </span>
+
+                </div>
+
+                <div class="stat-value">
+                    @Model.TodayMessages
+                </div>
+
+                <div class="stat-description">
+
+                    <i class="bi bi-clock"></i>
+
+                    <span>
+                        Bugünkü mesaj sayısı
+                    </span>
+
+                </div>
+
+            </article>
+
+
+            <!-- UNREAD -->
+            <article class="stat-card">
+
+                <div class="stat-card-header">
+
+                    <div class="stat-icon unread-icon">
+                        <i class="bi bi-envelope-exclamation"></i>
+                    </div>
+
+                    <span class="stat-name">
+                        Okunmamış
+                    </span>
+
+                </div>
+
+                <div class="stat-value">
+                    @Model.UnreadMessages
+                </div>
+
+                <div class="stat-description">
+
+                    <i class="bi bi-eye-slash"></i>
+
+                    <span>
+                        Okunmayı bekleyen mesaj
+                    </span>
+
+                </div>
+
+            </article>
+
+
+            <!-- TRASH -->
+            <article class="stat-card">
+
+                <div class="stat-card-header">
+
+                    <div class="stat-icon trash-icon">
+                        <i class="bi bi-trash3"></i>
+                    </div>
+
+                    <span class="stat-name">
+                        Çöp Kutusu
+                    </span>
+
+                </div>
+
+                <div class="stat-value">
+                    @Model.TrashMessages
+                </div>
+
+                <div class="stat-description">
+
+                    <i class="bi bi-archive"></i>
+
+                    <span>
+                        Çöpe taşınmış mesaj
+                    </span>
+
+                </div>
+
+            </article>
+
+        </section>
+
+
+        <!-- =================================================
+             DASHBOARD DETAILS
+        ================================================== -->
+        <section class="dashboard-grid">
+
+
+            <!-- =================================================
+                 TOP SENDERS
+            ================================================== -->
+            <article class="dashboard-card">
+
+                <div class="dashboard-card-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            KULLANICILAR
+                        </span>
+
+                        <h2>
+                            En Fazla Mesaj Gönderenler
+                        </h2>
+
+                        <p>
+                            En çok mesaj gönderen ilk 5 kullanıcı.
+                        </p>
+
+                    </div>
+
+                    <div class="section-icon">
+                        <i class="bi bi-bar-chart"></i>
+                    </div>
+
+                </div>
+
+
+                <div class="ranking-list">
+
+                    @if (Model.TopSenders != null &&
+                                        Model.TopSenders.Any())
+                    {
+                        for (var i = 0; i < Model.TopSenders.Count; i++)
+                        {
+                            var sender = Model.TopSenders[i];
+
+                            var senderName =
+                            string.IsNullOrWhiteSpace(sender.FullName)
+                            ? "Bilinmeyen Kullanıcı"
+                            : sender.FullName;
+
+                            var initial =
+                            !string.IsNullOrWhiteSpace(senderName)
+                            ? senderName.Substring(0, 1).ToUpper()
+                            : "?";
+
+
+                            <div class="ranking-item">
+
+                                <div class="rank-number @(i == 0 ? "first-rank" : "")">
+                                    @(i + 1)
+                                </div>
+
+
+                                <div class="ranking-avatar">
+                                    @initial
+                                </div>
+
+
+                                <div class="ranking-user">
+
+                                    <strong>
+                                        @senderName
+                                    </strong>
+
+                                    <span>
+                                        @(string.IsNullOrWhiteSpace(sender.Email)
+                                                                        ? "E-posta bilgisi bulunmuyor"
+                                                                        : sender.Email)
+                            </span>
+
+                                </div>
+
+
+                                <div class="ranking-count">
+
+                                    <strong>
+                                        @sender.MessageCount
+                                    </strong>
+
+                                    <span>
+                                        mesaj
+                                    </span>
+
+                                </div>
+
+                            </div>
+                                        }
+                    }
+                    else
+                    {
+                        <div class="empty-section">
+
+                            <div class="empty-section-icon">
+                                <i class="bi bi-send"></i>
+                            </div>
+
+                            <strong>
+                                Mesaj verisi bulunmuyor
+                            </strong>
+
+                            <span>
+                                Kullanıcılar mesaj gönderdikçe istatistikler
+                                burada görüntülenecektir.
+                            </span>
+
+                        </div>
+                    }
+
+                </div>
+
+            </article>
+
+
+            <!-- =================================================
+                 CATEGORIES
+            ================================================== -->
+            <article class="dashboard-card">
+
+                <div class="dashboard-card-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            KATEGORİLER
+                        </span>
+
+                        <h2>
+                            En Çok Kullanılan Kategoriler
+                        </h2>
+
+                        <p>
+                            Mesajların kategori dağılımı.
+                        </p>
+
+                    </div>
+
+                    <div class="section-icon">
+                        <i class="bi bi-tags"></i>
+                    </div>
+
+                </div>
+
+
+                <div class="category-list">
+
+                    @if (Model.CategoryStatistics != null &&
+                                        Model.CategoryStatistics.Any())
+                    {
+                        foreach (var category in Model.CategoryStatistics)
+                        {
+                            var percentage = category.Percentage;
+
+                            if (percentage < 0)
+                            {
+                                percentage = 0;
+                            }
+
+                            if (percentage > 100)
+                            {
+                                percentage = 100;
+                            }
+
+
+                            <div class="category-item">
+
+                                <div class="category-header">
+
+                                    <div class="category-main">
+
+                                        <div class="category-icon">
+                                            <i class="bi bi-tag"></i>
+                                        </div>
+
+
+                                        <div class="category-text">
+
+                                            <strong>
+                                                @category.CategoryName
+                                            </strong>
+
+                                            <span>
+                                                @category.MessageCount mesaj
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="category-percentage">
+                                        %@category.Percentage.ToString("0.#")
+                                    </div>
+
+                                </div>
+
+
+                                <div class="progress-track">
+
+                                    <div class="progress-value"
+                                         style="width: @(percentage.ToString(System.Globalization.CultureInfo.InvariantCulture))%;">
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="empty-section">
+
+                            <div class="empty-section-icon">
+                                <i class="bi bi-tags"></i>
+                            </div>
+
+                            <strong>
+                                Kategori verisi bulunmuyor
+                            </strong>
+
+                            <span>
+                                Mesajlar gönderildikçe kategori dağılımı
+                                burada görüntülenecektir.
+                            </span>
+
+                        </div>
+                    }
+
+                </div>
+
+            </article>
+
+        </section>
+
+    </main>
+
+</div>

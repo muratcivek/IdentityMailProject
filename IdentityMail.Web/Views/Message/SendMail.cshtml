@@ -1,257 +1,185 @@
-﻿@model IdentityMail.Web.DTOs.UserMessageDtos.SendMailDto
+﻿@using IdentityMail.Web.DTOs.UserMessageDtos
+@using IdentityMail.Web.Entities
+@model SendMailDto
 
 @{
     ViewData["Title"] = "Yeni Mesaj";
 }
 
-<style>
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/Message/SendMail.css"
+          asp-append-version="true" />
+}
 
-    body {
-        background: linear-gradient(135deg,#eef4ff,#f8fafc);
-    }
+<div class="mail-layout">
 
-    .compose-card {
-        max-width: 900px;
-        margin: 45px auto;
-        border: none;
-        border-radius: 20px;
-        overflow: hidden;
-        background: #fff;
-        box-shadow: 0 20px 45px rgba(0,0,0,.08);
-    }
+    <partial name="_MessageSidebar" />
 
-    .compose-header {
-        background: linear-gradient(135deg,#2563eb,#1e3a8a);
-        color: white;
-        padding: 35px;
-    }
+    <main class="content">
 
-        .compose-header h2 {
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
+        <div class="page-header">
 
-        .compose-header p {
-            opacity: .9;
-            margin-bottom: 0;
-        }
+            <div>
+                <span class="page-label">MESAJLAR</span>
+                <h1>Yeni Mesaj</h1>
+                <p>Kayıtlı bir kullanıcıya yeni mesaj gönderin.</p>
+            </div>
 
-    .compose-body {
-        padding: 35px;
-    }
+            <a asp-action="Index"
+               class="back-button">
 
-    .info-box {
-        background: #eef6ff;
-        border-left: 5px solid #2563eb;
-        padding: 18px;
-        border-radius: 12px;
-        margin-bottom: 30px;
-    }
+                <i class="bi bi-arrow-left"></i>
+                Gelen Kutusu
 
-    .form-label {
-        font-weight: 600;
-        color: #495057;
-        margin-bottom: 8px;
-    }
-
-    .input-group-text {
-        border-radius: 12px 0 0 12px;
-        background: #f8f9fa;
-    }
-
-    .form-control {
-        border-radius: 0 12px 12px 0;
-        border: 1px solid #dee2e6;
-        padding: 12px 15px;
-        transition: .25s;
-    }
-
-        .form-control:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 .15rem rgba(37,99,235,.15);
-        }
-
-    textarea.form-control {
-        border-radius: 12px;
-        resize: none;
-    }
-
-    .validation-summary-valid {
-        display: none;
-    }
-
-    .validation-summary-errors {
-        border-radius: 12px;
-        margin-bottom: 20px;
-    }
-
-        .validation-summary-errors ul {
-            margin-bottom: 0;
-            padding-left: 18px;
-        }
-
-    .btn-send {
-        background: linear-gradient(135deg,#2563eb,#1d4ed8);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        padding: 12px 28px;
-        font-weight: 600;
-        transition: .25s;
-    }
-
-        .btn-send:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(37,99,235,.25);
-            color: white;
-        }
-
-    .btn-cancel {
-        border-radius: 12px;
-        padding: 12px 28px;
-    }
-
-    .text-danger {
-        font-size: .9rem;
-    }
-
-</style>
-
-<div class="compose-card">
-
-    <div class="compose-header">
-
-        <h2>
-            <i class="bi bi-envelope-plus-fill"></i>
-            Yeni Mesaj
-        </h2>
-
-        <p>
-            Kurumsal posta sisteminiz üzerinden güvenli şekilde mesaj gönderin.
-        </p>
-
-    </div>
-
-    <div class="compose-body">
-
-        <div class="info-box">
-
-            <i class="bi bi-info-circle-fill text-primary"></i>
-
-            <strong>Bilgilendirme</strong>
-
-            <br />
-
-            Mesaj yalnızca sistemde kayıtlı kullanıcıların
-            e-posta adreslerine gönderilebilir.
+            </a>
 
         </div>
 
-        <form asp-action="SendMail" method="post">
 
-            <div asp-validation-summary="ModelOnly"
-                 class="alert alert-danger">
+        <div class="compose-card">
+
+            <div class="compose-intro">
+
+                <div class="compose-icon">
+                    <i class="bi bi-envelope-plus"></i>
+                </div>
+
+                <div>
+                    <h3>Mesaj Oluştur</h3>
+                    <p>
+                        Mesaj yalnızca kayıtlı kullanıcılara gönderilebilir.
+                    </p>
+                </div>
+
             </div>
 
-            <div class="mb-4">
 
-                <label asp-for="ReceiverMail" class="form-label">
-                    Alıcı E-Posta
-                </label>
+            <form asp-action="SendMail"
+                  method="post">
 
-                <div class="input-group">
+                <input asp-for="DraftId" type="hidden" />
 
-                    <span class="input-group-text">
-                        <i class="bi bi-person-fill"></i>
+                <div asp-validation-summary="ModelOnly"
+                     class="validation-summary">
+                </div>
+
+                <div class="form-group">
+
+                    <label asp-for="ReceiverMail">
+                        Alıcı E-Posta
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="bi bi-envelope"></i>
+
+                        <input asp-for="ReceiverMail"
+                               placeholder="ornek@mail.com" />
+
+                    </div>
+
+                    <span asp-validation-for="ReceiverMail"
+                          class="validation-text">
                     </span>
-
-                    <input asp-for="ReceiverMail"
-                           class="form-control"
-                           placeholder="ornek@mail.com" />
 
                 </div>
 
-                <span asp-validation-for="ReceiverMail"
-                      class="text-danger"></span>
 
-            </div>
+                <div class="form-grid">
 
-            <div class="mb-4">
+                    <div class="form-group">
 
-                <label asp-for="Subject"
-                       class="form-label">
+                        <label asp-for="Subject">
+                            Konu
+                        </label>
 
-                    Konu
+                        <div class="input-wrapper">
 
-                </label>
+                            <i class="bi bi-chat-left-text"></i>
 
-                <div class="input-group">
+                            <input asp-for="Subject"
+                                   placeholder="Mesaj konusu" />
 
-                    <span class="input-group-text">
-                        <i class="bi bi-chat-left-text-fill"></i>
-                    </span>
+                        </div>
 
-                    <input asp-for="Subject"
-                           class="form-control"
-                           placeholder="Mesaj konusu" />
+                        <span asp-validation-for="Subject"
+                              class="validation-text">
+                        </span>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label asp-for="Category">
+                            Kategori
+                        </label>
+
+                        <select asp-for="Category"
+                                asp-items="Html.GetEnumSelectList<MessageCategory>()">
+                        </select>
+
+                    </div>
 
                 </div>
 
-                <span asp-validation-for="Subject"
-                      class="text-danger"></span>
 
-            </div>
+                <div class="form-group">
 
-            <div class="mb-4">
+                    <label asp-for="Body">
+                        Mesaj İçeriği
+                    </label>
 
-                <label asp-for="Body"
-                       class="form-label">
+                    <textarea asp-for="Body"
+                              rows="11"
+                              placeholder="Mesajınızı yazınız...">
+                    </textarea>
 
-                    Mesaj İçeriği
+                    <span asp-validation-for="Body"
+                          class="validation-text">
+                    </span>
 
-                </label>
+                </div>
 
-                <textarea asp-for="Body"
-                          rows="10"
-                          class="form-control"
-                          placeholder="Mesajınızı buraya yazınız..."></textarea>
 
-                <span asp-validation-for="Body"
-                      class="text-danger"></span>
+                <div class="form-actions">
 
-            </div>
+                    <a asp-action="Index"
+                       class="cancel-button">
+                        Vazgeç
+                    </a>
 
-            <hr />
+                    <button type="submit"
+                            asp-action="SaveDraft"
+                            formnovalidate
+                            class="draft-button">
 
-            <div class="d-flex justify-content-between">
+                        <i class="bi bi-file-earmark"></i>
+                        Taslak Kaydet
 
-                <a asp-action="Index"
-                   class="btn btn-outline-secondary btn-cancel">
+                    </button>
 
-                    <i class="bi bi-arrow-left"></i>
+                    <button type="submit"
+                            asp-action="SendMail"
+                            class="send-button">
 
-                    Gelen Kutusu
+                        <i class="bi bi-send"></i>
+                        Mesajı Gönder
 
-                </a>
+                    </button>
 
-                <button type="submit"
-                        class="btn btn-send">
+                </div>
 
-                    <i class="bi bi-send-fill"></i>
+            </form>
 
-                    Mesajı Gönder
+        </div>
 
-                </button>
-
-            </div>
-
-        </form>
-
-    </div>
+    </main>
 
 </div>
 
-@section Scripts
-{
+
+@section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

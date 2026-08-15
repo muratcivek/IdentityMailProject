@@ -1,0 +1,544 @@
+﻿@using IdentityMail.Web.DTOs.AdminDtos
+@model RoleManagementDto
+
+@{
+    ViewData["Title"] = "Rol Yönetimi";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/Admin/Roles.css"
+          asp-append-version="true" />
+}
+
+<div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+                <i class="bi bi-shield-check"></i>
+            </div>
+
+            <div class="brand-text">
+                <strong>Identity Mail</strong>
+                <span>Yönetim Paneli</span>
+            </div>
+
+        </div>
+
+        <div class="admin-profile">
+
+            <div class="admin-avatar">
+                @{
+                    var fullName = ViewBag.fullName?.ToString();
+
+                    if (!string.IsNullOrWhiteSpace(fullName))
+                    {
+                        @fullName.Substring(0, 1).ToUpper()
+                    }
+                    else
+                    {
+                        <span>A</span>
+                    }
+                }
+            </div>
+
+            <div class="admin-profile-info">
+                <strong>
+                    @(ViewBag.fullName ?? "Yönetici")
+                </strong>
+
+                <span>
+                    Sistem Yöneticisi
+                </span>
+            </div>
+
+        </div>
+
+        <div class="sidebar-section-title">
+            YÖNETİM
+        </div>
+
+        <nav class="sidebar-menu">
+
+            <a asp-controller="Admin"
+               asp-action="Index"
+               class="sidebar-link">
+
+                <i class="bi bi-grid-1x2"></i>
+                <span>Dashboard</span>
+
+            </a>
+
+            <a asp-controller="Admin"
+               asp-action="Users"
+               class="sidebar-link">
+
+                <i class="bi bi-people"></i>
+                <span>Kullanıcı Yönetimi</span>
+
+            </a>
+
+            <a asp-controller="Admin"
+               asp-action="Roles"
+               class="sidebar-link active">
+
+                <i class="bi bi-shield-lock"></i>
+                <span>Rol Yönetimi</span>
+
+            </a>
+
+            <a asp-controller="Admin"
+               asp-action="Reports"
+               class="sidebar-link">
+
+                <i class="bi bi-flag"></i>
+
+                <span>
+                    Şikayetler
+                </span>
+
+            </a>
+
+        </nav>
+
+        <div class="sidebar-section-title application-title">
+            UYGULAMA
+        </div>
+
+        <nav class="sidebar-menu">
+
+            <a asp-controller="Message"
+               asp-action="Index"
+               class="sidebar-link">
+
+                <i class="bi bi-envelope"></i>
+                <span>Mesajlara Dön</span>
+
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a asp-controller="Auth"
+               asp-action="Logout"
+               class="logout-link">
+
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Oturumu Kapat</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- CONTENT -->
+    <main class="admin-content">
+
+        <div class="page-header">
+
+            <div>
+                <span class="page-label">
+                    YÖNETİM
+                </span>
+
+                <h1>
+                    Rol Yönetimi
+                </h1>
+
+                <p>
+                    Sistem rollerini yönetin ve kullanıcılara rol atayın.
+                </p>
+            </div>
+
+            <div class="role-count-box">
+
+                <i class="bi bi-shield-lock"></i>
+
+                <span>
+                    @Model.Roles.Count rol
+                </span>
+
+            </div>
+
+        </div>
+
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert-message alert-success">
+
+                <i class="bi bi-check-circle-fill"></i>
+
+                <span>
+                    @TempData["Success"]
+                </span>
+
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert-message alert-error">
+
+                <i class="bi bi-exclamation-circle-fill"></i>
+
+                <span>
+                    @TempData["Error"]
+                </span>
+
+            </div>
+        }
+
+
+        <div class="role-grid">
+
+            <!-- SOL: ROLLER -->
+            <section class="role-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            SİSTEM ROLLERİ
+                        </span>
+
+                        <h2>
+                            Roller
+                        </h2>
+
+                        <p>
+                            Yeni rol oluşturabilir veya kullanılmayan rolleri silebilirsiniz.
+                        </p>
+
+                    </div>
+
+                    <div class="section-icon">
+                        <i class="bi bi-shield"></i>
+                    </div>
+
+                </div>
+
+
+                <!-- ROL EKLE -->
+                <form asp-controller="Admin"
+                      asp-action="CreateRole"
+                      method="post"
+                      class="create-role-form">
+
+                    @Html.AntiForgeryToken()
+
+                    <div class="input-wrapper">
+
+                        <i class="bi bi-plus-circle"></i>
+
+                        <input type="text"
+                               name="roleName"
+                               placeholder="Yeni rol adı..."
+                               autocomplete="off" />
+
+                    </div>
+
+                    <button type="submit"
+                            class="create-role-button">
+
+                        <i class="bi bi-plus-lg"></i>
+
+                        Rol Ekle
+
+                    </button>
+
+                </form>
+
+
+                <!-- ROL LİSTESİ -->
+                <div class="role-list">
+
+                    @if (Model.Roles.Any())
+                    {
+                        foreach (var role in Model.Roles)
+                        {
+                            var isSystemRole =
+                            role.Name == "Admin" ||
+                            role.Name == "User";
+
+                            <div class="role-row">
+
+                                <div class="role-main">
+
+                                    <div class="role-icon">
+                                        <i class="bi bi-shield-check"></i>
+                                    </div>
+
+                                    <div class="role-info">
+
+                                        <strong>
+                                            @role.Name
+                                        </strong>
+
+                                        @if (isSystemRole)
+                                        {
+                                            <span>
+                                                Sistem rolü
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span>
+                                                Özel rol
+                                            </span>
+                                        }
+
+                                    </div>
+
+                                </div>
+
+
+                                @if (isSystemRole)
+                                {
+                                    <span class="protected-role">
+                                        <i class="bi bi-lock"></i>
+                                        Korunuyor
+                                    </span>
+                                }
+                                else
+                                {
+                                    <form asp-controller="Admin"
+                                          asp-action="DeleteRole"
+                                          asp-route-id="@role.Id"
+                                          method="post">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="delete-role-button"
+                                                onclick="return confirm('@role.Name rolü silinsin mi?');">
+
+                                            <i class="bi bi-trash3"></i>
+
+                                            Sil
+
+                                        </button>
+
+                                    </form>
+                                }
+
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="empty-state">
+
+                            <i class="bi bi-shield"></i>
+
+                            <strong>
+                                Rol bulunamadı
+                            </strong>
+
+                        </div>
+                    }
+
+                </div>
+
+            </section>
+
+
+            <!-- SAĞ: KULLANICI ROLLERİ -->
+            <section class="role-card user-role-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            KULLANICI YETKİLERİ
+                        </span>
+
+                        <h2>
+                            Kullanıcı Rolleri
+                        </h2>
+
+                        <p>
+                            Kullanıcılara rol ekleyin veya mevcut rollerini kaldırın.
+                        </p>
+
+                    </div>
+
+                    <div class="section-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+
+                </div>
+
+
+                <div class="user-role-list">
+
+                    @if (Model.Users.Any())
+                    {
+                        foreach (var user in Model.Users)
+                        {
+                            <article class="user-role-item">
+
+                                <div class="user-header">
+
+                                    <div class="user-main">
+
+                                        <div class="user-avatar">
+
+                                            @(string.IsNullOrWhiteSpace(user.FullName)
+                                                                                ? "?"
+                                                                                : user.FullName.Substring(0, 1).ToUpper())
+
+                                </div>
+
+                                        <div class="user-info">
+
+                                            <strong>
+                                                @user.FullName
+                                            </strong>
+
+                                            <span>
+                                                @user.Email
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- MEVCUT ROLLER -->
+                                <div class="current-roles">
+
+                                    <span class="roles-label">
+                                        Mevcut Roller
+                                    </span>
+
+                                    <div class="role-badges">
+
+                                @if (user.Roles.Any())
+                                        {
+                                            foreach (var userRole in user.Roles)
+                                            {
+                                                <div class="role-badge">
+
+                                                    <span>
+                                                        <i class="bi bi-shield-check"></i>
+                                                        @userRole
+                                                    </span>
+
+                                                    <form asp-controller="Admin"
+                                                          asp-action="RemoveUserRole"
+                                                          method="post">
+
+                                                        @Html.AntiForgeryToken()
+
+                                                        <input type="hidden"
+                                                               name="userId"
+                                                               value="@user.Id" />
+
+                                                        <input type="hidden"
+                                                               name="roleName"
+                                                               value="@userRole" />
+
+                                                        <button type="submit"
+                                                                title="Rolü kaldır"
+                                                                onclick="return confirm('@userRole rolü kullanıcıdan kaldırılsın mı?');">
+
+                                                            <i class="bi bi-x"></i>
+
+                                                        </button>
+
+                                                    </form>
+
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="no-role">
+                                                Rol atanmamış
+                                            </span>
+                                        }
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- ROL EKLE -->
+                                <form asp-controller="Admin"
+                                      asp-action="AddUserRole"
+                                      method="post"
+                                      class="assign-role-form">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="userId"
+                                           value="@user.Id" />
+
+                                    <select name="roleName"
+                                            required>
+
+                                        <option value="">
+                                            Rol seçiniz
+                                        </option>
+
+                                        @foreach (var role in Model.Roles)
+                                        {
+                                            if (!user.Roles.Contains(role.Name))
+                                            {
+                                                <option value="@role.Name">
+                                                    @role.Name
+                                                </option>
+                                            }
+                                        }
+
+                                    </select>
+
+
+                                    <button type="submit">
+
+                                        <i class="bi bi-plus-lg"></i>
+
+                                        Rol Ata
+
+                                    </button>
+
+                                </form>
+
+                            </article>
+                        }
+                    }
+                    else
+                    {
+                        <div class="empty-state">
+
+                            <i class="bi bi-people"></i>
+
+                            <strong>
+                                Kullanıcı bulunamadı
+                            </strong>
+
+                        </div>
+                    }
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>

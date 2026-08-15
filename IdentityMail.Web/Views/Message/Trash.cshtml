@@ -1,0 +1,302 @@
+﻿@using IdentityMail.Web.Entities
+@model List<UserMessage>
+
+@{
+    ViewData["Title"] = "Çöp Kutusu";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/Message/Trash.css"
+          asp-append-version="true" />
+}
+
+<div class="mail-layout">
+
+    <partial name="_MessageSidebar" />
+
+    <main class="content">
+
+        <div class="page-header">
+
+            <div>
+
+                <span class="page-label">
+                    MESAJLAR
+                </span>
+
+                <h1>Çöp Kutusu</h1>
+
+                <p>
+                    Sildiğiniz mesajları geri yükleyebilir veya kalıcı olarak silebilirsiniz.
+                </p>
+
+            </div>
+
+
+            <div class="search-box">
+
+                <i class="bi bi-search"></i>
+
+                <input type="text"
+                       id="trashSearch"
+                       placeholder="Çöp kutusunda ara..." />
+
+            </div>
+
+        </div>
+
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="success-message">
+
+                <i class="bi bi-check-circle"></i>
+
+                @TempData["Success"]
+
+            </div>
+        }
+
+
+        <div class="message-list">
+
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    var isReceived =
+                    item.ReceiverId ==
+                    int.Parse(User.FindFirst(
+                    System.Security.Claims.ClaimTypes.NameIdentifier
+                    )!.Value);
+
+                    var person =
+                    isReceived
+                    ? item.Sender
+                    : item.Receiver;
+
+                    <div class="message-card">
+
+                        <div class="sender-avatar">
+
+                            @if (person != null &&
+                                                !string.IsNullOrWhiteSpace(person.FirstName))
+                            {
+                                @(person.FirstName
+                                                    .Substring(0, 1)
+                                                    .ToUpper())
+                                        }
+                            else
+                            {
+                                <span>?</span>
+                            }
+
+                </div>
+
+
+                <div class="message-content">
+
+                    <div class="message-top">
+
+                        <div class="person-info">
+
+                            <span class="direction-label">
+
+                                @(isReceived
+                                                                ? "GÖNDEREN"
+                                                                : "ALICI")
+
+                            </span>
+
+                            <strong>
+
+                                @(person == null
+                                                                ? "Bilinmeyen Kullanıcı"
+                                                                : $"{person.FirstName} {person.LastName}")
+
+                            </strong>
+
+                                </div>
+
+
+                                <div class="message-date">
+
+                                    <i class="bi bi-clock"></i>
+
+                                    @item.SendDate.ToString("dd.MM.yyyy HH:mm")
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="message-subject">
+                                @item.Subject
+                            </div>
+
+
+                            <div class="message-preview">
+
+                        @if (!string.IsNullOrWhiteSpace(item.Body))
+                                {
+                                    @(item.Body.Length > 130
+                                                            ? item.Body.Substring(0, 130) + "..."
+                                                            : item.Body)
+                                                }
+
+                            </div>
+
+
+                            <div class="message-bottom">
+
+                                <div class="message-tags">
+
+                                    <span class="category-badge">
+
+                                        <i class="bi bi-tag"></i>
+
+                                        @item.Category
+
+                                    </span>
+
+
+                                    <span class="direction-badge">
+
+                                        <i class="bi @(isReceived
+                                                                                       ? "bi-inbox"
+                                                                                       : "bi-send")"></i>
+
+                                        @(isReceived
+                                                                        ? "Gelen Mesaj"
+                                                                        : "Gönderilen Mesaj")
+
+                            </span>
+
+                                </div>
+
+
+                                <div class="message-actions">
+
+                                    <form asp-controller="Message"
+                                          asp-action="Restore"
+                                          asp-route-id="@item.Id"
+                                          method="post">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="restore-button">
+
+                                            <i class="bi bi-arrow-counterclockwise"></i>
+
+                                            Geri Yükle
+
+                                        </button>
+
+                                    </form>
+
+
+                                    <form asp-controller="Message"
+                                          asp-action="PermanentDelete"
+                                          asp-route-id="@item.Id"
+                                          method="post"
+                                          onsubmit="return confirm('Bu mesaj kalıcı olarak silinsin mi? Bu işlem geri alınamaz.');">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="delete-button">
+
+                                            <i class="bi bi-trash3"></i>
+
+                                            Kalıcı Sil
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                        }
+            }
+            else
+            {
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        <i class="bi bi-trash"></i>
+                    </div>
+
+                    <h3>
+                        Çöp kutunuz boş
+                    </h3>
+
+                    <p>
+                        Sildiğiniz mesajlar burada görüntülenecektir.
+                    </p>
+
+                    <a asp-controller="Message"
+                       asp-action="Index"
+                       class="empty-button">
+
+                        <i class="bi bi-inbox"></i>
+
+                        Gelen Kutusuna Git
+
+                    </a>
+
+                </div>
+            }
+
+        </div>
+
+    </main>
+
+</div>
+
+
+@section Scripts {
+
+    <script>
+
+        const trashSearch =
+            document.getElementById("trashSearch");
+
+        if (trashSearch) {
+
+            trashSearch.addEventListener(
+                "input",
+                function () {
+
+                    const searchText =
+                        this.value
+                            .toLowerCase()
+                            .trim();
+
+                    document
+                        .querySelectorAll(".message-card")
+                        .forEach(function (card) {
+
+                            const content =
+                                card.innerText.toLowerCase();
+
+                            card.style.display =
+                                content.includes(searchText)
+                                    ? ""
+                                    : "none";
+
+                        });
+
+                });
+
+        }
+
+    </script>
+
+}

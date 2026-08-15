@@ -1,0 +1,490 @@
+﻿* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background: #f5f7fa;
+    color: #1d2939;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+/* ==============================
+   LAYOUT
+============================== */
+
+.mail-layout {
+    min-height: 100vh;
+    display: flex;
+}
+
+.content {
+    flex: 1;
+    min-width: 0;
+    padding: 38px 42px 60px;
+}
+
+/* ==============================
+   HEADER
+============================== */
+
+.page-header {
+    margin-bottom: 22px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.page-label {
+    display: block;
+    margin-bottom: 6px;
+    color: #294da5;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.1px;
+}
+
+.page-header h1 {
+    margin: 0;
+    color: #101828;
+    font-size: 28px;
+    font-weight: 750;
+}
+
+.page-header p {
+    margin: 6px 0 0;
+    color: #98a2b3;
+    font-size: 11px;
+}
+
+.report-count {
+    height: 40px;
+    padding: 0 13px;
+    border: 1px solid #e4e7ec;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #667085;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* ==============================
+   SUMMARY
+============================== */
+
+.summary-grid {
+    margin-bottom: 18px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.summary-card {
+    min-height: 88px;
+    padding: 14px;
+    border: 1px solid #e4e7ec;
+    border-radius: 12px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    box-shadow: 0 3px 12px rgba(16, 24, 40, .02);
+}
+
+.summary-icon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+}
+
+.pending-icon {
+    background: #fff7ed;
+    color: #c4320a;
+}
+
+.reviewed-icon {
+    background: #eef3ff;
+    color: #294da5;
+}
+
+.action-icon {
+    background: #ecfdf3;
+    color: #067647;
+}
+
+.rejected-icon {
+    background: #fff1f0;
+    color: #b42318;
+}
+
+.summary-card > div:last-child {
+    display: flex;
+    flex-direction: column;
+}
+
+.summary-card span {
+    color: #98a2b3;
+    font-size: 9px;
+}
+
+.summary-card strong {
+    margin-top: 3px;
+    color: #101828;
+    font-size: 18px;
+    font-weight: 750;
+}
+
+/* ==============================
+   REPORT LIST
+============================== */
+
+.reports-list {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.report-card {
+    padding: 20px;
+    border: 1px solid #e4e7ec;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 3px 12px rgba(16, 24, 40, .025);
+}
+
+/* ==============================
+   REPORT HEADER
+============================== */
+
+.report-header {
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #edf0f3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.message-user {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.sender-avatar {
+    width: 43px;
+    height: 43px;
+    min-width: 43px;
+    border-radius: 10px;
+    background: #eaf0ff;
+    color: #294da5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.sender-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+    .sender-info > span {
+        color: #98a2b3;
+        font-size: 7px;
+        font-weight: 800;
+        letter-spacing: .7px;
+    }
+
+    .sender-info strong {
+        margin-top: 2px;
+        color: #101828;
+        font-size: 11px;
+    }
+
+    .sender-info small {
+        margin-top: 2px;
+        color: #98a2b3;
+        font-size: 8px;
+    }
+
+.report-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.report-date {
+    color: #98a2b3;
+    font-size: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* ==============================
+   STATUS
+============================== */
+
+.status-badge {
+    height: 27px;
+    padding: 0 9px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 8px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.status-pending {
+    background: #fff7ed;
+    color: #c4320a;
+}
+
+.status-reviewed {
+    background: #eef3ff;
+    color: #294da5;
+}
+
+.status-action {
+    background: #ecfdf3;
+    color: #067647;
+}
+
+.status-rejected {
+    background: #fff1f0;
+    color: #b42318;
+}
+
+/* ==============================
+   INFORMATION
+============================== */
+
+.report-info-grid {
+    margin-bottom: 14px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.report-info {
+    padding: 12px;
+    border: 1px solid #edf0f3;
+    border-radius: 9px;
+    background: #fafbfc;
+    display: flex;
+    flex-direction: column;
+}
+
+    .report-info span {
+        color: #98a2b3;
+        font-size: 8px;
+    }
+
+    .report-info strong {
+        margin-top: 4px;
+        color: #344054;
+        font-size: 10px;
+    }
+
+/* ==============================
+   DESCRIPTION
+============================== */
+
+.description-box,
+.message-preview {
+    margin-bottom: 14px;
+    padding: 14px;
+    border: 1px solid #edf0f3;
+    border-radius: 10px;
+    background: #fafbfc;
+}
+
+    .description-box > span,
+    .message-preview > span {
+        color: #98a2b3;
+        font-size: 7px;
+        font-weight: 800;
+        letter-spacing: .7px;
+    }
+
+    .description-box p,
+    .message-preview p {
+        margin: 6px 0 0;
+        color: #667085;
+        font-size: 10px;
+        line-height: 1.65;
+        white-space: pre-wrap;
+    }
+
+/* ==============================
+   FOOTER
+============================== */
+
+.report-footer {
+    padding-top: 14px;
+    border-top: 1px solid #edf0f3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.status-description {
+    color: #667085;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 9px;
+}
+
+    .status-description i {
+        color: #294da5;
+    }
+
+.message-button {
+    height: 36px;
+    padding: 0 11px;
+    border: 1px solid #d8dde6;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #294da5;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 9px;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: .2s ease;
+}
+
+    .message-button:hover {
+        border-color: #294da5;
+        background: #294da5;
+        color: #ffffff;
+    }
+
+/* ==============================
+   EMPTY
+============================== */
+
+.empty-state {
+    min-height: 390px;
+    padding: 40px;
+    border: 1px solid #e4e7ec;
+    border-radius: 14px;
+    background: #ffffff;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.empty-icon {
+    width: 65px;
+    height: 65px;
+    margin-bottom: 14px;
+    border-radius: 50%;
+    background: #f2f4f7;
+    color: #667085;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+}
+
+.empty-state h3 {
+    margin: 0 0 5px;
+    color: #101828;
+    font-size: 15px;
+}
+
+.empty-state p {
+    max-width: 390px;
+    margin: 0 0 17px;
+    color: #98a2b3;
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+.empty-button {
+    height: 38px;
+    padding: 0 13px;
+    border-radius: 8px;
+    background: #294da5;
+    color: #ffffff;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+/* ==============================
+   RESPONSIVE
+============================== */
+
+@media (max-width: 1050px) {
+    .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .report-info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    .mail-layout {
+        flex-direction: column;
+    }
+
+    .content {
+        padding: 20px 16px;
+    }
+
+    .page-header,
+    .report-header,
+    .report-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .report-meta {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .message-button {
+        width: 100%;
+    }
+}

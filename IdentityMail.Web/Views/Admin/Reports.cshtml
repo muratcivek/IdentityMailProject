@@ -1,0 +1,516 @@
+﻿@using IdentityMail.Web.Entities
+@using IdentityMail.Web.Helpers
+@model List<MessageReport>
+
+@{
+    ViewData["Title"] = "Şikayet Yönetimi";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/Admin/Reports.css"
+          asp-append-version="true" />
+}
+
+<div class="admin-layout">
+
+    <aside class="admin-sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+                <i class="bi bi-shield-check"></i>
+            </div>
+
+            <div class="brand-text">
+                <strong>Identity Mail</strong>
+                <span>Yönetim Paneli</span>
+            </div>
+
+        </div>
+
+        <div class="admin-profile">
+
+            <div class="admin-avatar">
+                @{
+                    var fullName = ViewBag.fullName?.ToString();
+
+                    if (!string.IsNullOrWhiteSpace(fullName))
+                    {
+                        @fullName.Substring(0, 1).ToUpper()
+                    }
+                    else
+                    {
+                        <span>A</span>
+                    }
+                }
+            </div>
+
+            <div class="admin-profile-info">
+                <strong>
+                    @(ViewBag.fullName ?? "Yönetici")
+                </strong>
+
+                <span>
+                    Sistem Yöneticisi
+                </span>
+            </div>
+
+        </div>
+
+        <div class="sidebar-section-title">
+            YÖNETİM
+        </div>
+
+        <nav class="sidebar-menu">
+
+            <a asp-controller="Admin"
+               asp-action="Index"
+               class="sidebar-link">
+
+                <i class="bi bi-grid-1x2"></i>
+                <span>Dashboard</span>
+
+            </a>
+
+            <a asp-controller="Admin"
+               asp-action="Users"
+               class="sidebar-link">
+
+                <i class="bi bi-people"></i>
+                <span>Kullanıcı Yönetimi</span>
+
+            </a>
+
+            <a asp-controller="Admin"
+               asp-action="Roles"
+               class="sidebar-link">
+
+                <i class="bi bi-shield-lock"></i>
+                <span>Rol Yönetimi</span>
+
+            </a>
+
+            <a asp-controller="Admin"
+               asp-action="Reports"
+               class="sidebar-link active">
+
+                <i class="bi bi-flag"></i>
+                <span>Şikayetler</span>
+
+                @if (Model != null &&
+                                Model.Any(x => x.Status == ReportStatus.Pending))
+                {
+                    <span class="pending-count">
+                        @Model.Count(x => x.Status == ReportStatus.Pending)
+                    </span>
+                }
+
+            </a>
+
+        </nav>
+
+        <div class="sidebar-section-title application-title">
+            UYGULAMA
+        </div>
+
+        <nav class="sidebar-menu">
+
+            <a asp-controller="Message"
+               asp-action="Index"
+               class="sidebar-link">
+
+                <i class="bi bi-envelope"></i>
+                <span>Mesajlara Dön</span>
+
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a asp-controller="Auth"
+               asp-action="Logout"
+               class="logout-link">
+
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Oturumu Kapat</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <main class="admin-content">
+
+        <div class="page-header">
+
+            <div>
+
+                <span class="page-label">
+                    YÖNETİM
+                </span>
+
+                <h1>
+                    Mesaj Şikayetleri
+                </h1>
+
+                <p>
+                    Kullanıcılar tarafından bildirilen mesajları inceleyin.
+                </p>
+
+            </div>
+
+            <div class="report-count-box">
+
+                <i class="bi bi-flag"></i>
+
+                <span>
+                    @(Model?.Count ?? 0) şikayet
+                </span>
+
+            </div>
+
+        </div>
+
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert-message alert-success">
+
+                <i class="bi bi-check-circle-fill"></i>
+
+                @TempData["Success"]
+
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert-message alert-error">
+
+                <i class="bi bi-exclamation-circle-fill"></i>
+
+                @TempData["Error"]
+
+            </div>
+        }
+
+
+        <div class="report-summary">
+
+            <div class="summary-item">
+
+                <div class="summary-icon pending-icon">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+
+                <div>
+                    <span>Bekleyen</span>
+
+                    <strong>
+                        @(Model?.Count(x => x.Status == ReportStatus.Pending) ?? 0)
+                    </strong>
+                </div>
+
+            </div>
+
+            <div class="summary-item">
+
+                <div class="summary-icon reviewed-icon">
+                    <i class="bi bi-check2-circle"></i>
+                </div>
+
+                <div>
+                    <span>İncelenen</span>
+
+                    <strong>
+                        @(Model?.Count(x => x.Status == ReportStatus.Reviewed) ?? 0)
+                    </strong>
+                </div>
+
+            </div>
+
+            <div class="summary-item">
+
+                <div class="summary-icon action-icon">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+
+                <div>
+                    <span>İşlem Yapılan</span>
+
+                    <strong>
+                        @(Model?.Count(x => x.Status == ReportStatus.ActionTaken) ?? 0)
+                    </strong>
+                </div>
+
+            </div>
+
+            <div class="summary-item">
+
+                <div class="summary-icon rejected-icon">
+                    <i class="bi bi-x-circle"></i>
+                </div>
+
+                <div>
+                    <span>Reddedilen</span>
+
+                    <strong>
+                        @(Model?.Count(x => x.Status == ReportStatus.Rejected) ?? 0)
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="reports-list">
+
+            @if (Model != null && Model.Any())
+            {
+                foreach (var report in Model)
+                {
+                    <article class="report-card">
+
+                        <div class="report-card-header">
+
+                            <div class="report-user-area">
+
+                                <div class="reporter-avatar">
+
+                                    @(report.Reporter != null &&
+                                                                !string.IsNullOrWhiteSpace(report.Reporter.FirstName)
+                                                                ? report.Reporter.FirstName.Substring(0, 1).ToUpper()
+                                                                : "?")
+
+                                </div>
+
+                                <div class="reporter-info">
+
+                                    <span class="small-label">
+                                        ŞİKAYET EDEN
+                                    </span>
+
+                                    <strong>
+                                        @(report.Reporter == null
+                                                                        ? "Bilinmeyen Kullanıcı"
+                                                                        : $"{report.Reporter.FirstName} {report.Reporter.LastName}")
+                            </strong>
+
+                                    <small>
+                                        @report.Reporter?.Email
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="report-meta">
+
+                                <span class="report-date">
+                                    <i class="bi bi-clock"></i>
+
+                                    @report.CreatedDate.ToString("dd.MM.yyyy HH:mm")
+                                </span>
+
+                        @switch (report.Status)
+                                {
+                                    case ReportStatus.Pending:
+                                        <span class="status-badge pending-status">
+                                            Bekliyor
+                                        </span>
+                                        break;
+
+                                    case ReportStatus.Reviewed:
+                                        <span class="status-badge reviewed-status">
+                                            İncelendi
+                                        </span>
+                                        break;
+
+                                    case ReportStatus.Rejected:
+                                        <span class="status-badge rejected-status">
+                                            Reddedildi
+                                        </span>
+                                        break;
+
+                                    case ReportStatus.ActionTaken:
+                                        <span class="status-badge action-status">
+                                            İşlem Yapıldı
+                                        </span>
+                                        break;
+                                }
+
+                    </div>
+
+                </div>
+
+
+                <div class="report-details-grid">
+
+                    <div class="detail-box">
+
+                        <span>
+                            Şikayet Nedeni
+                        </span>
+
+                        <strong>
+                            @report.Reason.GetDisplayName()
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-box">
+
+                        <span>
+                            Mesaj Gönderen
+                        </span>
+
+                        <strong>
+                            @(report.Message?.Sender == null
+                                                        ? "Bilinmeyen"
+                                                        : $"{report.Message.Sender.FirstName} {report.Message.Sender.LastName}")
+                                                                                                                            </strong>
+
+                    </div>
+
+
+                    <div class="detail-box">
+
+                        <span>
+                            Mesaj Alıcısı
+                        </span>
+
+                        <strong>
+                            @(report.Message?.Receiver == null
+                                                        ? "Bilinmeyen"
+                                                        : $"{report.Message.Receiver.FirstName} {report.Message.Receiver.LastName}")
+                        </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="reported-message">
+
+                            <span class="small-label">
+                                ŞİKAYET EDİLEN MESAJ
+                            </span>
+
+                            <h3>
+                                @(report.Message?.Subject ?? "Konu bulunamadı")
+                            </h3>
+
+                            <p>
+                                @(report.Message?.Body ?? "Mesaj içeriği bulunamadı.")
+                            </p>
+
+                        </div>
+
+
+                @if (!string.IsNullOrWhiteSpace(report.Description))
+                        {
+                            <div class="report-description">
+
+                                <span class="small-label">
+                                    KULLANICI AÇIKLAMASI
+                                </span>
+
+                                <p>
+                                    @report.Description
+                                </p>
+
+                            </div>
+                        }
+
+
+                        <div class="report-actions">
+
+                            <a asp-controller="Message"
+                               asp-action="Detail"
+                               asp-route-id="@report.MessageId"
+                               class="view-message-button">
+
+                                <i class="bi bi-eye"></i>
+
+                                Mesajı Görüntüle
+
+                            </a>
+
+
+                            <form asp-controller="Admin"
+                                  asp-action="UpdateReportStatus"
+                                  method="post"
+                                  class="status-form">
+
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="@report.Id" />
+
+                                <select name="status">
+
+                                    @foreach (ReportStatus status in Enum.GetValues(typeof(ReportStatus)))
+                                    {
+                                        if (report.Status == status)
+                                        {
+                                            <option value="@status" selected>
+                                                @status.GetDisplayName()
+                                            </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@status">
+                                                @status.GetDisplayName()
+                                            </option>
+                                        }
+                                    }
+
+                                </select>
+
+                                <button type="submit">
+
+                                    <i class="bi bi-check-lg"></i>
+
+                                    Güncelle
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </article>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        <i class="bi bi-flag"></i>
+                    </div>
+
+                    <h3>
+                        Şikayet bulunmuyor
+                    </h3>
+
+                    <p>
+                        Sistemde henüz kullanıcılar tarafından oluşturulmuş bir şikayet yok.
+                    </p>
+
+                </div>
+            }
+
+        </div>
+
+    </main>
+
+</div>

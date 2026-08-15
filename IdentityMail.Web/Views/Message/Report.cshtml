@@ -1,0 +1,199 @@
+﻿@using IdentityMail.Web.DTOs.UserMessageDtos
+@using IdentityMail.Web.Entities
+@model ReportMessageDto
+
+@{
+    ViewData["Title"] = "Mesajı Şikayet Et";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/Message/Report.css"
+          asp-append-version="true" />
+}
+
+<div class="mail-layout">
+
+    <partial name="_MessageSidebar" />
+
+    <main class="content">
+
+        <div class="page-header">
+
+            <div>
+
+                <span class="page-label">
+                    MESAJ İŞLEMLERİ
+                </span>
+
+                <h1>
+                    Mesajı Şikayet Et
+                </h1>
+
+                <p>
+                    Uygunsuz veya şüpheli bir mesajı yönetici incelemesine gönderebilirsiniz.
+                </p>
+
+            </div>
+
+            <a asp-controller="Message"
+               asp-action="Detail"
+               asp-route-id="@Model.MessageId"
+               class="back-button">
+
+                <i class="bi bi-arrow-left"></i>
+                Mesaja Dön
+
+            </a>
+
+        </div>
+
+
+        <div class="report-card">
+
+            <div class="report-intro">
+
+                <div class="report-icon">
+                    <i class="bi bi-flag"></i>
+                </div>
+
+                <div>
+
+                    <h3>
+                        Şikayet Bildirimi
+                    </h3>
+
+                    <p>
+                        Gönderdiğiniz bildirim yalnızca sistem yöneticileri tarafından incelenir.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="report-warning">
+
+                <i class="bi bi-info-circle"></i>
+
+                <div>
+
+                    <strong>
+                        Bilgilendirme
+                    </strong>
+
+                    <span>
+                        Aynı mesaj için yalnızca bir kez şikayet oluşturabilirsiniz.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <form asp-controller="Message"
+                  asp-action="Report"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       asp-for="MessageId" />
+
+                <div asp-validation-summary="ModelOnly"
+                     class="validation-summary">
+                </div>
+
+
+                <div class="form-group">
+
+                    <label asp-for="Reason">
+                        Şikayet Nedeni
+                    </label>
+
+                    <div class="select-wrapper">
+
+                        <i class="bi bi-exclamation-triangle"></i>
+
+                        <select asp-for="Reason"
+                                asp-items="Html.GetEnumSelectList<ReportReason>()">
+
+                            <option value="">
+                                Şikayet nedeni seçiniz
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <span asp-validation-for="Reason"
+                          class="validation-text">
+                    </span>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label asp-for="Description">
+                        Açıklama
+                    </label>
+
+                    <textarea asp-for="Description"
+                              rows="7"
+                              maxlength="500"
+                              placeholder="Şikayetiniz hakkında ek bilgi verebilirsiniz...">
+                    </textarea>
+
+                    <div class="field-help">
+
+                        <span>
+                            İsteğe bağlıdır.
+                        </span>
+
+                        <span>
+                            En fazla 500 karakter.
+                        </span>
+
+                    </div>
+
+                    <span asp-validation-for="Description"
+                          class="validation-text">
+                    </span>
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <a asp-controller="Message"
+                       asp-action="Detail"
+                       asp-route-id="@Model.MessageId"
+                       class="cancel-button">
+
+                        Vazgeç
+
+                    </a>
+
+                    <button type="submit"
+                            class="report-submit-button">
+
+                        <i class="bi bi-flag-fill"></i>
+
+                        Şikayeti Gönder
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

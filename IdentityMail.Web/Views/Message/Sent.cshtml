@@ -1,0 +1,271 @@
+﻿@using IdentityMail.Web.Entities
+@model List<UserMessage>
+
+@{
+    ViewData["Title"] = "Gönderilenler";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/Message/Sent.css"
+          asp-append-version="true" />
+}
+
+<div class="mail-layout">
+
+    <partial name="_MessageSidebar" />
+
+    <main class="content">
+
+        <div class="page-header">
+
+            <div>
+
+                <span class="page-label">
+                    MESAJLAR
+                </span>
+
+                <h1>
+                    Gönderilenler
+                </h1>
+
+                <p>
+                    Gönderdiğiniz mesajları ve okunma durumlarını görüntüleyin.
+                </p>
+
+            </div>
+
+            <div class="search-box">
+
+                <i class="bi bi-search"></i>
+
+                <input type="text"
+                       id="sentSearch"
+                       placeholder="Gönderilen mesajlarda ara..." />
+
+            </div>
+
+        </div>
+
+        <div class="message-list">
+
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <div class="message-card">
+
+                        <div class="message-left">
+
+                            <div class="receiver-avatar">
+
+                                @if (item.Receiver != null &&
+                                                        !string.IsNullOrWhiteSpace(item.Receiver.FirstName))
+                                {
+                                    @(item.Receiver.FirstName.Substring(0, 1).ToUpper())
+                                }
+                                else
+                                {
+                                    <span>?</span>
+                                }
+
+                            </div>
+
+                        </div>
+
+                        <div class="message-center">
+
+                            <div class="message-header-line">
+
+                                <div class="receiver-area">
+
+                                    <div class="receiver-block">
+
+                                        <span class="receiver-label">
+                                            ALICI
+                                        </span>
+
+                                        <strong class="receiver-name">
+
+                                            @if (item.Receiver != null)
+                                            {
+                                                @($"{item.Receiver.FirstName} {item.Receiver.LastName}")
+                                            }
+                                            else
+                                            {
+                                                <span>Bilinmeyen Kullanıcı</span>
+                                            }
+
+                                        </strong>
+
+                                    </div>
+
+                                    <span class="category-badge">
+
+                                        <i class="bi bi-tag"></i>
+
+                                        @item.Category
+
+                                    </span>
+
+                                </div>
+
+                                <div class="message-date">
+
+                                    <i class="bi bi-clock"></i>
+
+                                    @item.SendDate.ToString("dd.MM.yyyy HH:mm")
+
+                                </div>
+
+                            </div>
+
+                            <div class="message-subject">
+                                @item.Subject
+                            </div>
+
+                            <div class="message-preview">
+
+                                @if (!string.IsNullOrWhiteSpace(item.Body))
+                                {
+                                    @(item.Body.Length > 130
+                                                            ? item.Body.Substring(0, 130) + "..."
+                                                            : item.Body)
+                                                }
+                                else
+                                {
+                                    <span>
+                                        Mesaj içeriği bulunmuyor.
+                                    </span>
+                                }
+
+                            </div>
+
+                            <div class="message-footer-line">
+
+                                <div class="message-status-area">
+
+                                    @if (item.IsRead)
+                                    {
+                                        <span class="read-badge">
+
+                                            <i class="bi bi-check2-all"></i>
+
+                                            Okundu
+
+                                        </span>
+
+                                        <span class="status-text">
+                                            Alıcı mesajı görüntüledi.
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="unread-badge">
+
+                                            <i class="bi bi-check2"></i>
+
+                                            Okunmadı
+
+                                        </span>
+
+                                        <span class="status-text">
+                                            Henüz alıcı tarafından açılmadı.
+                                        </span>
+                                    }
+
+                                </div>
+
+                                <a asp-controller="Message"
+                                   asp-action="Detail"
+                                   asp-route-id="@item.Id"
+                                   class="message-open-button">
+
+                                    <span>
+                                        Mesajı Aç
+                                    </span>
+
+                                    <i class="bi bi-arrow-right"></i>
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+
+                        <i class="bi bi-send"></i>
+
+                    </div>
+
+                    <h3>
+                        Henüz mesaj göndermediniz
+                    </h3>
+
+                    <p>
+                        Gönderdiğiniz mesajlar burada listelenecektir.
+                    </p>
+
+                    <a asp-controller="Message"
+                       asp-action="SendMail"
+                       class="empty-button">
+
+                        <i class="bi bi-pencil-square"></i>
+
+                        Yeni Mesaj Oluştur
+
+                    </a>
+
+                </div>
+            }
+
+        </div>
+
+    </main>
+
+</div>
+
+@section Scripts {
+
+    <script>
+        const sentSearch =
+            document.getElementById("sentSearch");
+
+        if (sentSearch) {
+
+            sentSearch.addEventListener(
+                "input",
+                function () {
+
+                    const searchText =
+                        this.value
+                            .toLowerCase()
+                            .trim();
+
+                    document
+                        .querySelectorAll(".message-card")
+                        .forEach(function (card) {
+
+                            const content =
+                                card.innerText.toLowerCase();
+
+                            card.style.display =
+                                content.includes(searchText)
+                                    ? ""
+                                    : "none";
+
+                        });
+
+                });
+        }
+    </script>
+
+}

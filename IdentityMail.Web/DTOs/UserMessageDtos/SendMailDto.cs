@@ -1,17 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using IdentityMail.Web.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace IdentityMail.Web.DTOs.UserMessageDtos
 {
     public class SendMailDto
     {
-        [Required(ErrorMessage = "Alıcı e-posta zorunludur.")]
-        [EmailAddress]
-        public string ReceiverMail { get; set; }
+        public int? DraftId { get; set; }
 
-        [Required(ErrorMessage = "Konu zorunludur.")]
-        public string Subject { get; set; }
+        [EmailAddress(ErrorMessage = "Geçerli bir e-posta adresi giriniz.")]
+        public string? ReceiverMail { get; set; }
 
-        [Required(ErrorMessage = "Mesaj boş bırakılamaz.")]
-        public string Body { get; set; }
+        public string? Subject { get; set; }
+
+        public string? Body { get; set; }
+
+        public MessageCategory Category { get; set; } = MessageCategory.General;
     }
 }

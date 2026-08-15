@@ -1,0 +1,43 @@
+﻿1. Kimlik Doğrulama ve Profil
+	- Kullanıcılar yalnızca giriş yaptıktan sonra mesaj ekranlarına erişebilir.
+	- Profil ekranı oluşturulur.
+	- Ad, soyad, profil fotoğrafı güncellenebilir.
+	- Şifre değiştirme ve Şifremi Unuttum ekranı eklenir.
+	- Aynı e-posta ile birden fazla hesap oluşturulamaz.
+2. Mesaj İşlemleri
+	- Yeni Mesaj oluşturma ekranı.
+	- Alıcı, konu ve mesaj alanları.
+	- Yalnızca kayıtlı kullanıcılara mesaj gönderimi.
+	- Mesaj açılınca otomatik okundu durumu.
+	- Okunmamış mesaj sayısı sidebar'da gösterilir.
+	- Mesaj yanıtlama.
+	- Gönderilen mesajın okunma durumu görüntülenebilir.
+	- Mesajlar kategorilere atanabilir.
+3. Sidebar
+	Yeni Mesaj, Gelen Kutusu, Gönderilenler, Taslaklar, Önemli Mesajlar, Çöp Kutusu,
+	Kategoriler.
+4. Gelen Kutusu
+	- Okunan/Okunmayan filtreleri.
+	- Yıldız ile önemli işaretleme.
+	- Önemli Mesajlar ekranı.
+	- Çöp Kutusuna taşı ve Geri Yükle.
+5. Taslak Sistemi
+	- Taslak kaydetme, düzenleme, gönderme ve silme.
+6. Arama / Filtreleme / Sayfalama
+	- Gönderen adına, konuya, tarih aralığına ve kategoriye göre arama/filtreleme.
+	- Okunan, okunmayan ve önemli filtreleri birlikte kullanılabilir.
+	- Sayfalama ve yeni/eski sıralama.
+7. Rol Yönetimi
+	Kullanıcı: Mesaj gönderme, görüntüleme, profil düzenleme, kategori oluşturma.
+	Admin: Kullanıcı listeleme, pasif yapma, rol atama, mesaj istatistikleri, şikayet edilen
+	mesajları inceleme.
+8. Admin Paneli
+	- Toplam/Aktif kullanıcı sayısı
+	- Toplam ve bugün gönderilen mesaj sayısı
+	- Okunmamış mesaj sayısı
+	- Çöp kutusundaki mesaj sayısı
+	- En fazla mesaj gönderen kullanıcılar
+	- En çok kullanılan kategoriler
+9. Arayüz
+	- Login ve Register sayfaları Stitch AI ile modern ve kullanıcı dostu şekilde yeniden
+	tasarlanacaktır.

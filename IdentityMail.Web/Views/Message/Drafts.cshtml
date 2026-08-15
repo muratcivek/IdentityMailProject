@@ -1,0 +1,279 @@
+﻿@using IdentityMail.Web.Entities
+@model List<UserMessage>
+
+@{
+    ViewData["Title"] = "Taslaklar";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/Message/Drafts.css"
+          asp-append-version="true" />
+}
+
+<div class="mail-layout">
+
+    <partial name="_MessageSidebar" />
+
+    <main class="content">
+
+        <div class="page-header">
+
+            <div>
+                <span class="page-label">MESAJLAR</span>
+
+                <h1>Taslaklar</h1>
+
+                <p>
+                    Kaydettiğiniz taslakları düzenleyebilir, gönderebilir veya silebilirsiniz.
+                </p>
+            </div>
+
+            <div class="search-box">
+
+                <i class="bi bi-search"></i>
+
+                <input type="text"
+                       id="draftSearch"
+                       placeholder="Taslaklarda ara..." />
+
+            </div>
+
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="success-message">
+
+                <i class="bi bi-check-circle"></i>
+
+                @TempData["Success"]
+
+            </div>
+        }
+
+        <div class="draft-list">
+
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <div class="draft-card">
+
+                        <div class="draft-icon">
+
+                            <i class="bi bi-file-earmark-text"></i>
+
+                        </div>
+
+                        <div class="draft-content">
+
+                            <div class="draft-header">
+
+                                <div class="draft-recipient">
+
+                                    <span class="small-label">
+                                        ALICI
+                                    </span>
+
+                                    <strong>
+
+                                        @if (item.Receiver != null)
+                                        {
+                                            @($"{item.Receiver.FirstName} {item.Receiver.LastName}")
+                                        }
+                                        else
+                                        {
+                                            <span>Alıcı seçilmedi</span>
+                                        }
+
+                                    </strong>
+
+                                    @if (item.Receiver != null &&
+                                                                !string.IsNullOrWhiteSpace(item.Receiver.Email))
+                                    {
+                                        <small>
+                                            @item.Receiver.Email
+                                        </small>
+                                    }
+
+                        </div>
+
+                        <div class="draft-date">
+
+                            <i class="bi bi-clock"></i>
+
+                            @(item.DraftUpdatedDate?.ToString("dd.MM.yyyy HH:mm")
+                                                        ?? item.SendDate.ToString("dd.MM.yyyy HH:mm"))
+
+                        </div>
+
+                            </div>
+
+                            <div class="draft-subject">
+
+                        @if (!string.IsNullOrWhiteSpace(item.Subject))
+                                {
+                                    @item.Subject
+                                }
+                                else
+                                {
+                                    <span class="empty-text">
+                                        Konu girilmedi
+                                    </span>
+                                }
+
+                            </div>
+
+                            <div class="draft-preview">
+
+                                @if (!string.IsNullOrWhiteSpace(item.Body))
+                                {
+                                    @(item.Body.Length > 130
+                                                            ? item.Body.Substring(0, 130) + "..."
+                                                            : item.Body)
+                                                }
+                                else
+                                {
+                                    <span class="empty-text">
+                                        Mesaj içeriği girilmedi.
+                                    </span>
+                                }
+
+                            </div>
+
+                            <div class="draft-footer">
+
+                                <div class="draft-tags">
+
+                                    <span class="category-badge">
+
+                                        <i class="bi bi-tag"></i>
+
+                                        @item.Category
+
+                                    </span>
+
+                                    <span class="draft-badge">
+
+                                        <i class="bi bi-file-earmark"></i>
+
+                                        Taslak
+
+                                    </span>
+
+                                </div>
+
+                                <div class="draft-actions">
+
+                                    <a asp-controller="Message"
+                                       asp-action="EditDraft"
+                                       asp-route-id="@item.Id"
+                                       class="edit-button">
+
+                                        <i class="bi bi-pencil"></i>
+
+                                        Düzenle
+
+                                    </a>
+
+                                    <form asp-controller="Message"
+                                          asp-action="DeleteDraft"
+                                          asp-route-id="@item.Id"
+                                          method="post">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="delete-button"
+                                                onclick="return confirm('Bu taslak silinsin mi?');">
+
+                                            <i class="bi bi-trash3"></i>
+
+                                            Sil
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+
+                        <i class="bi bi-file-earmark-text"></i>
+
+                    </div>
+
+                    <h3>
+                        Henüz taslağınız yok
+                    </h3>
+
+                    <p>
+                        Yeni mesaj oluştururken "Taslak Kaydet" butonunu kullanabilirsiniz.
+                    </p>
+
+                    <a asp-controller="Message"
+                       asp-action="SendMail"
+                       class="empty-button">
+
+                        <i class="bi bi-pencil-square"></i>
+
+                        Yeni Mesaj Oluştur
+
+                    </a>
+
+                </div>
+            }
+
+        </div>
+
+    </main>
+
+</div>
+
+@section Scripts {
+
+    <script>
+        const draftSearch =
+            document.getElementById("draftSearch");
+
+        if (draftSearch) {
+
+            draftSearch.addEventListener("input", function () {
+
+                const searchText =
+                    this.value
+                        .toLowerCase()
+                        .trim();
+
+                document
+                    .querySelectorAll(".draft-card")
+                    .forEach(function (card) {
+
+                        const content =
+                            card.innerText.toLowerCase();
+
+                        card.style.display =
+                            content.includes(searchText)
+                                ? ""
+                                : "none";
+
+                    });
+
+            });
+
+        }
+    </script>
+
+}

@@ -1,0 +1,218 @@
+﻿@{
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+    var fullName = ViewBag.fullName?.ToString();
+    var profileImage = ViewBag.profileImage?.ToString();
+}
+
+<aside class="sidebar">
+
+    <div class="sidebar-profile">
+
+        <div class="profile-avatar">
+
+            @if (!string.IsNullOrWhiteSpace(profileImage))
+            {
+                <img src="@profileImage"
+                     alt="Profil"
+                     class="profile-image" />
+            }
+            else if (!string.IsNullOrWhiteSpace(fullName))
+            {
+                @fullName.Substring(0, 1).ToUpper()
+            }
+            else
+            {
+                <span>U</span>
+            }
+
+        </div>
+
+        <div class="profile-info">
+
+            <strong>
+                @(fullName ?? "Kullanıcı")
+            </strong>
+
+            <span>
+                Aktif kullanıcı
+            </span>
+
+        </div>
+
+        <a asp-controller="Profile"
+           asp-action="Index"
+           class="profile-settings"
+           title="Profil Ayarları">
+
+            <i class="bi bi-gear"></i>
+
+        </a>
+
+    </div>
+
+
+    <a asp-controller="Message"
+       asp-action="SendMail"
+       class="compose-button">
+
+        <i class="bi bi-pencil-square"></i>
+
+        <span>
+            Yeni Mesaj
+        </span>
+
+    </a>
+
+
+    <div class="menu-title">
+        MESAJLAR
+    </div>
+
+
+    <a asp-controller="Message"
+       asp-action="Index"
+       class="menu-item @(currentAction == "Index" ? "active" : "")">
+
+        <i class="bi bi-inbox"></i>
+
+        <span>
+            Gelen Kutusu
+        </span>
+
+        @if ((ViewBag.unreadCount ?? 0) > 0)
+        {
+            <span class="menu-count">
+                @ViewBag.unreadCount
+            </span>
+        }
+
+    </a>
+
+
+    <a asp-controller="Message"
+       asp-action="Sent"
+       class="menu-item @(currentAction == "Sent" ? "active" : "")">
+
+        <i class="bi bi-send"></i>
+
+        <span>
+            Gönderilenler
+        </span>
+
+    </a>
+
+
+    <a asp-controller="Message"
+       asp-action="Drafts"
+       class="menu-item @(currentAction == "Drafts" || currentAction == "EditDraft" ? "active" : "")">
+
+        <i class="bi bi-file-earmark-text"></i>
+
+        <span>
+            Taslaklar
+        </span>
+
+    </a>
+
+
+    <a asp-controller="Message"
+       asp-action="Important"
+       class="menu-item @(currentAction == "Important" ? "active" : "")">
+
+        <i class="bi bi-star"></i>
+
+        <span>
+            Önemliler
+        </span>
+
+    </a>
+
+    <a asp-controller="Message"
+       asp-action="MyReports"
+       class="menu-item">
+
+        <i class="bi bi-flag"></i>
+        <span>Şikayetlerim</span>
+
+    </a>
+
+
+    <a asp-controller="Message"
+       asp-action="Trash"
+       class="menu-item @(currentAction == "Trash" ? "active" : "")">
+
+        <i class="bi bi-trash"></i>
+
+        <span>
+            Çöp Kutusu
+        </span>
+
+    </a>
+
+
+    <div class="menu-title account-title">
+        HESAP
+    </div>
+
+
+    <a asp-controller="Profile"
+       asp-action="Index"
+       class="menu-item">
+
+        <i class="bi bi-person"></i>
+
+        <span>
+            Profil Bilgileri
+        </span>
+
+    </a>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="menu-title account-title">
+            YÖNETİM
+        </div>
+
+        <a asp-controller="Admin"
+           asp-action="Index"
+           class="menu-item">
+
+            <i class="bi bi-speedometer2"></i>
+
+            <span>
+                Admin Paneli
+            </span>
+
+        </a>
+
+        <a asp-controller="Admin"
+           asp-action="PasswordResetRequests"
+           class="menu-item">
+
+            <i class="bi bi-key"></i>
+
+            <span>
+                Şifre Talepleri
+            </span>
+
+        </a>
+    }
+
+    <div class="sidebar-bottom">
+
+        <a asp-controller="Auth"
+           asp-action="Logout"
+           class="logout-button">
+
+            <i class="bi bi-box-arrow-right"></i>
+
+            <span>
+                Oturumu Kapat
+            </span>
+
+        </a>
+
+    </div>
+
+</aside>

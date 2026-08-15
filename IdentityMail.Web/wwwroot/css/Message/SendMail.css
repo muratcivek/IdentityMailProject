@@ -1,0 +1,362 @@
+﻿html,
+body {
+    margin: 0;
+    padding: 0;
+    background: #f5f7fa;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #1d2939;
+}
+
+.mail-layout {
+    min-height: 100vh;
+    display: flex;
+}
+
+.sidebar {
+    width: 270px;
+    min-width: 270px;
+    min-height: 100vh;
+    padding: 20px 18px;
+    background: #ffffff;
+    border-right: 1px solid #e7eaf0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-profile {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 0 5px 20px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid #edf0f3;
+}
+
+.profile-avatar {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 12px;
+    background: #294da5;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.profile-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+    .profile-info strong {
+        font-size: 13px;
+    }
+
+    .profile-info span {
+        color: #98a2b3;
+        font-size: 10px;
+    }
+
+.compose-button {
+    height: 46px;
+    margin-bottom: 27px;
+    border-radius: 9px;
+    background: #294da5;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.menu-title {
+    padding: 0 10px;
+    margin-bottom: 8px;
+    color: #98a2b3;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.account-title {
+    margin-top: 26px;
+}
+
+.menu-item {
+    height: 44px;
+    margin-bottom: 4px;
+    padding: 0 12px;
+    border-radius: 9px;
+    color: #475467;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 13px;
+}
+
+    .menu-item:hover {
+        background: #f4f6fb;
+        color: #294da5;
+    }
+
+.menu-count {
+    margin-left: auto;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+    padding-top: 17px;
+    border-top: 1px solid #edf0f3;
+}
+
+.logout-button {
+    height: 43px;
+    padding: 0 12px;
+    color: #b42318;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+}
+
+.content {
+    flex: 1;
+    padding: 38px 42px;
+}
+
+.page-header {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.page-label {
+    display: block;
+    margin-bottom: 6px;
+    color: #294da5;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.page-header p {
+    margin: 6px 0 0;
+    color: #98a2b3;
+    font-size: 12px;
+}
+
+.back-button {
+    height: 42px;
+    padding: 0 15px;
+    border: 1px solid #d8dde6;
+    border-radius: 9px;
+    background: white;
+    color: #475467;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.compose-card {
+    max-width: 950px;
+    padding: 34px 38px;
+    border: 1px solid #e4e7ec;
+    border-radius: 15px;
+    background: white;
+    box-shadow: 0 5px 20px rgba(16, 24, 40, .04);
+}
+
+.compose-intro {
+    padding-bottom: 23px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid #edf0f3;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.compose-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 11px;
+    background: #eaf0ff;
+    color: #294da5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+}
+
+.compose-intro h3 {
+    margin: 0;
+    font-size: 17px;
+}
+
+.compose-intro p {
+    margin: 4px 0 0;
+    color: #98a2b3;
+    font-size: 11px;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+    .form-group label {
+        display: block;
+        margin-bottom: 7px;
+        color: #344054;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+    .input-wrapper i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #98a2b3;
+    }
+
+    .input-wrapper input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        border: 1px solid #dfe3e8;
+        border-radius: 9px;
+        outline: none;
+        font-size: 13px;
+    }
+
+    .input-wrapper input,
+    .form-group select {
+        height: 46px;
+    }
+
+    .input-wrapper input {
+        padding: 0 14px 0 40px;
+    }
+
+.form-group select {
+    padding: 0 12px;
+}
+
+.form-group textarea {
+    padding: 14px;
+    resize: vertical;
+}
+
+    .input-wrapper input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: #294da5;
+        box-shadow: 0 0 0 3px rgba(41, 77, 165, .08);
+    }
+
+.validation-summary,
+.validation-text {
+    color: #d92d20;
+    font-size: 11px;
+}
+
+.form-actions {
+    margin-top: 10px;
+    padding-top: 22px;
+    border-top: 1px solid #edf0f3;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.cancel-button,
+.send-button {
+    height: 42px;
+    padding: 0 18px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.cancel-button {
+    border: 1px solid #d8dde6;
+    background: white;
+    color: #475467;
+    text-decoration: none;
+}
+
+.send-button {
+    border: none;
+    background: #294da5;
+    color: white;
+}
+
+    .send-button:hover {
+        background: #203e87;
+    }
+
+.draft-button {
+    height: 42px;
+    padding: 0 18px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #344054;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+@media (max-width: 760px) {
+    .mail-layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-width: 100%;
+        min-height: auto;
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}

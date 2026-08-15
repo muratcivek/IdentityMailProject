@@ -1,0 +1,292 @@
+﻿@using IdentityMail.Web.Entities
+@model List<UserMessage>
+
+@{
+    ViewData["Title"] = "Önemliler";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/Message/Important.css"
+          asp-append-version="true" />
+}
+
+<div class="mail-layout">
+
+    <partial name="_MessageSidebar" />
+
+    <main class="content">
+
+        <div class="page-header">
+
+            <div>
+
+                <span class="page-label">
+                    MESAJLAR
+                </span>
+
+                <h1>
+                    Önemliler
+                </h1>
+
+                <p>
+                    Önemli olarak işaretlediğiniz mesajları görüntüleyin ve yönetin.
+                </p>
+
+            </div>
+
+            <div class="search-box">
+
+                <i class="bi bi-search"></i>
+
+                <input type="text"
+                       id="importantSearch"
+                       placeholder="Önemli mesajlarda ara..." />
+
+            </div>
+
+        </div>
+
+        <div class="message-list">
+
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <div class="message-card @(item.IsRead ? "" : "unread")">
+
+                        <div class="message-left">
+
+                            <div class="sender-avatar">
+
+                                @if (item.Sender != null &&
+                                                        !string.IsNullOrWhiteSpace(item.Sender.FirstName))
+                                {
+                                    @(item.Sender.FirstName.Substring(0, 1).ToUpper())
+                                }
+                                else
+                                {
+                                    <span>?</span>
+                                }
+
+                            </div>
+
+                        </div>
+
+                        <div class="message-center">
+
+                            <div class="message-header-line">
+
+                                <div class="sender-area">
+
+                                    <strong class="sender-name">
+
+                                        @if (item.Sender != null)
+                                        {
+                                            @($"{item.Sender.FirstName} {item.Sender.LastName}")
+                                        }
+                                        else
+                                        {
+                                            <span>Bilinmeyen Kullanıcı</span>
+                                        }
+
+                                    </strong>
+
+                                    <span class="important-badge">
+
+                                        <i class="bi bi-star-fill"></i>
+
+                                        Önemli
+
+                                    </span>
+
+                                    @if (!item.IsRead)
+                                    {
+                                        <span class="new-badge">
+                                            Yeni
+                                        </span>
+                                    }
+
+                                </div>
+
+                                <div class="message-date">
+
+                                    <i class="bi bi-clock"></i>
+
+                                    @item.SendDate.ToString("dd.MM.yyyy HH:mm")
+
+                                </div>
+
+                            </div>
+
+                            <div class="message-subject">
+                                @item.Subject
+                            </div>
+
+                            <div class="message-preview">
+
+                                @if (!string.IsNullOrWhiteSpace(item.Body))
+                                {
+                                    @(item.Body.Length > 130
+                                                            ? item.Body.Substring(0, 130) + "..."
+                                                            : item.Body)
+                                                }
+                                else
+                                {
+                                    <span>
+                                        Mesaj içeriği bulunmuyor.
+                                    </span>
+                                }
+
+                            </div>
+
+                            <div class="message-footer-line">
+
+                                <div class="message-tags">
+
+                                    <span class="category-badge">
+
+                                        <i class="bi bi-tag"></i>
+
+                                        @item.Category
+
+                                    </span>
+
+                                    @if (item.IsRead)
+                                    {
+                                        <span class="read-badge">
+
+                                            <i class="bi bi-check2-all"></i>
+
+                                            Okundu
+
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="unread-badge">
+
+                                            <i class="bi bi-envelope"></i>
+
+                                            Okunmadı
+
+                                        </span>
+                                    }
+
+                                </div>
+
+                                <div class="message-actions">
+
+                                    <a asp-controller="Message"
+                                       asp-action="Detail"
+                                       asp-route-id="@item.Id"
+                                       class="message-open-button">
+
+                                        <span>
+                                            Mesajı Aç
+                                        </span>
+
+                                        <i class="bi bi-arrow-right"></i>
+
+                                    </a>
+
+                                    <form asp-controller="Message"
+                                          asp-action="ToggleImportant"
+                                          asp-route-id="@item.Id"
+                                          method="post"
+                                          class="important-form">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="remove-important-button"
+                                                title="Önemlilerden çıkar">
+
+                                            <i class="bi bi-star-fill"></i>
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+
+                        <i class="bi bi-star"></i>
+
+                    </div>
+
+                    <h3>
+                        Önemli mesajınız bulunmuyor
+                    </h3>
+
+                    <p>
+                        Gelen kutunuzdaki bir mesajı açıp önemli olarak işaretleyebilirsiniz.
+                    </p>
+
+                    <a asp-controller="Message"
+                       asp-action="Index"
+                       class="empty-button">
+
+                        <i class="bi bi-inbox"></i>
+
+                        Gelen Kutusuna Git
+
+                    </a>
+
+                </div>
+            }
+
+        </div>
+
+    </main>
+
+</div>
+
+@section Scripts {
+
+    <script>
+        const importantSearch =
+            document.getElementById("importantSearch");
+
+        if (importantSearch) {
+
+            importantSearch.addEventListener(
+                "input",
+                function () {
+
+                    const searchText =
+                        this.value
+                            .toLowerCase()
+                            .trim();
+
+                    document
+                        .querySelectorAll(".message-card")
+                        .forEach(function (card) {
+
+                            const content =
+                                card.innerText.toLowerCase();
+
+                            card.style.display =
+                                content.includes(searchText)
+                                    ? ""
+                                    : "none";
+
+                        });
+
+                });
+        }
+    </script>
+
+}

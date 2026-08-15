@@ -1,0 +1,435 @@
+﻿@using IdentityMail.Web.DTOs.AdminDtos
+@model List<AdminUserDto>
+
+@{
+    ViewData["Title"] = "Kullanıcı Yönetimi";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/Admin/Users.css"
+          asp-append-version="true" />
+}
+
+<div class="admin-layout">
+
+    <aside class="admin-sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+                <i class="bi bi-shield-check"></i>
+            </div>
+
+            <div class="brand-text">
+                <strong>Identity Mail</strong>
+                <span>Yönetim Paneli</span>
+            </div>
+
+        </div>
+
+        <div class="admin-profile">
+
+            <div class="admin-avatar">
+                @{
+                    var fullName = ViewBag.fullName?.ToString();
+
+                    if (!string.IsNullOrWhiteSpace(fullName))
+                    {
+                        @fullName.Substring(0, 1).ToUpper()
+                    }
+                    else
+                    {
+                        <span>A</span>
+                    }
+                }
+            </div>
+
+            <div class="admin-profile-info">
+                <strong>
+                    @(ViewBag.fullName ?? "Yönetici")
+                </strong>
+
+                <span>
+                    Sistem Yöneticisi
+                </span>
+            </div>
+
+        </div>
+
+        <div class="sidebar-section-title">
+            YÖNETİM
+        </div>
+
+        <nav class="sidebar-menu">
+
+            <a asp-controller="Admin"
+               asp-action="Index"
+               class="sidebar-link">
+
+                <i class="bi bi-grid-1x2"></i>
+                <span>Dashboard</span>
+
+            </a>
+
+            <a asp-controller="Admin"
+               asp-action="Users"
+               class="sidebar-link active">
+
+                <i class="bi bi-people"></i>
+                <span>Kullanıcı Yönetimi</span>
+
+            </a>
+
+            <a asp-controller="Admin"
+               asp-action="Roles"
+               class="sidebar-link">
+
+                <i class="bi bi-shield-lock"></i>
+
+                <span>
+                    Rol Yönetimi
+                </span>
+
+            </a>
+
+            <a asp-controller="Admin"
+               asp-action="Reports"
+               class="sidebar-link">
+
+                <i class="bi bi-flag"></i>
+
+                <span>
+                    Şikayetler
+                </span>
+
+            </a>
+
+        </nav>
+
+        <div class="sidebar-section-title application-title">
+            UYGULAMA
+        </div>
+
+        <nav class="sidebar-menu">
+
+            <a asp-controller="Message"
+               asp-action="Index"
+               class="sidebar-link">
+
+                <i class="bi bi-envelope"></i>
+                <span>Mesajlara Dön</span>
+
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a asp-controller="Auth"
+               asp-action="Logout"
+               class="logout-link">
+
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Oturumu Kapat</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <main class="admin-content">
+
+        <div class="page-header">
+
+            <div>
+
+                <span class="page-label">
+                    YÖNETİM
+                </span>
+
+                <h1>
+                    Kullanıcı Yönetimi
+                </h1>
+
+                <p>
+                    Sistemdeki kullanıcıları, durumlarını ve rollerini yönetin.
+                </p>
+
+            </div>
+
+            <div class="user-count-box">
+
+                <i class="bi bi-people"></i>
+
+                <span>
+                    @Model.Count kullanıcı
+                </span>
+
+            </div>
+
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert-message alert-success">
+                <i class="bi bi-check-circle-fill"></i>
+
+                <span>
+                    @TempData["Success"]
+                </span>
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert-message alert-error">
+                <i class="bi bi-exclamation-circle-fill"></i>
+
+                <span>
+                    @TempData["Error"]
+                </span>
+            </div>
+        }
+
+        <div class="users-card">
+
+            <div class="users-toolbar">
+
+                <form asp-controller="Admin"
+                      asp-action="Users"
+                      method="get"
+                      class="user-search-form">
+
+                    <div class="search-box">
+
+                        <i class="bi bi-search"></i>
+
+                        <input type="text"
+                               name="search"
+                               value="@ViewBag.Search"
+                               placeholder="Ad, e-posta veya kullanıcı adı ara..." />
+
+                    </div>
+
+                    <button type="submit"
+                            class="search-button">
+
+                        <i class="bi bi-search"></i>
+                        Ara
+
+                    </button>
+
+                    @if (!string.IsNullOrWhiteSpace(ViewBag.Search?.ToString()))
+                    {
+                        <a asp-controller="Admin"
+                           asp-action="Users"
+                           class="clear-search-button">
+
+                            <i class="bi bi-x-lg"></i>
+                            Temizle
+
+                        </a>
+                    }
+
+                </form>
+
+            </div>
+
+
+            <div class="users-table-wrapper">
+
+                <table class="users-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Kullanıcı</th>
+                            <th>Kullanıcı Adı</th>
+                            <th>Rol</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var user in Model)
+                        {
+                            var isAdmin =
+                            user.Roles.Contains("Admin");
+
+                            <tr class="user-row">
+
+                                <td>
+
+                                    <div class="user-cell">
+
+                                        <div class="user-avatar">
+
+                                            @(string.IsNullOrWhiteSpace(user.FullName)
+                                                                                    ? "?"
+                                                                                    : user.FullName.Substring(0, 1).ToUpper())
+
+                                    </div>
+
+                                        <div class="user-main">
+
+                                            <strong>
+                                                @user.FullName
+                                            </strong>
+
+                                            <span>
+                                                @user.Email
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+                                    <span class="username">
+                                        @user.UserName
+                                    </span>
+                                </td>
+
+
+                                <td>
+
+                                @if (isAdmin)
+                                    {
+                                        <span class="role-badge admin-role">
+
+                                            <i class="bi bi-shield-check"></i>
+                                            Admin
+
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="role-badge user-role">
+
+                                            <i class="bi bi-person"></i>
+                                            User
+
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <td>
+
+                                    @if (user.IsActive)
+                                    {
+                                        <span class="status-badge active-status">
+
+                                            <span class="status-dot"></span>
+                                            Aktif
+
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge passive-status">
+
+                                            <span class="status-dot"></span>
+                                            Pasif
+
+                                        </span>
+                                    }
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="user-actions">
+
+                                    <form asp-controller="Admin"
+                                          asp-action="ToggleActive"
+                                          asp-route-id="@user.Id"
+                                          method="post">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="action-button active-button">
+
+                                            <i class="bi @(user.IsActive ? "bi-person-x" : "bi-person-check")"></i>
+
+                                            @(user.IsActive
+                                                                                        ? "Pasif Yap"
+                                                                                        : "Aktif Yap")
+
+                                        </button>
+
+                                        </form>
+
+
+                                    @if (isAdmin)
+                                        {
+                                            <form asp-controller="Admin"
+                                                  asp-action="RemoveAdmin"
+                                                  asp-route-id="@user.Id"
+                                                  method="post">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="submit"
+                                                        class="action-button remove-admin-button"
+                                                        onclick="return confirm('Bu kullanıcının Admin rolü kaldırılsın mı?');">
+
+                                                    <i class="bi bi-shield-x"></i>
+                                                    Adminliği Kaldır
+
+                                                </button>
+
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <form asp-controller="Admin"
+                                                  asp-action="MakeAdmin"
+                                                  asp-route-id="@user.Id"
+                                                  method="post">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="submit"
+                                                        class="action-button make-admin-button"
+                                                        onclick="return confirm('Bu kullanıcı Admin yapılsın mı?');">
+
+                                                    <i class="bi bi-shield-check"></i>
+                                                    Admin Yap
+
+                                                </button>
+
+                                            </form>
+                                        }
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+

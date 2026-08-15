@@ -1,409 +1,200 @@
-# 📬 IdentityMail
+# IdentityMail
 
-**IdentityMail**, ASP.NET Core MVC ve ASP.NET Core Identity kullanılarak geliştirilmiş, rol tabanlı yetkilendirme ve yönetim özelliklerine sahip bir **şirket içi mesajlaşma sistemi** projesidir.
+IdentityMail, kurum içi iletişim ihtiyaçları için geliştirilmiş, rol tabanlı yetkilendirme ve yönetim özelliklerine sahip bir **ASP.NET Core MVC mesajlaşma uygulamasıdır**.
 
-Sistem; çalışanların kendi aralarında mesaj göndermesine, gelen ve gönderilen mesajlarını yönetmesine, mesajları kategorilere ayırmasına ve gerektiğinde mesajları yöneticilere şikayet etmesine olanak sağlar.
+Uygulama; kullanıcıların kurum içerisinde mesaj gönderebilmesini, gelen ve gönderilen mesajlarını yönetebilmesini, taslak oluşturabilmesini, önemli mesajlarını takip edebilmesini ve uygunsuz içerikleri yöneticilere bildirebilmesini sağlar.
 
-Yönetici tarafında ise kullanıcı, rol, şikayet ve şifre sıfırlama taleplerinin yönetilebildiği kapsamlı bir admin paneli bulunmaktadır.
-
----
-
-## 🚀 Özellikler
-
-### 👤 Kimlik Doğrulama ve Kullanıcı Sistemi
-
-- Kullanıcı kayıt sistemi
-- Kullanıcı giriş / çıkış işlemleri
-- ASP.NET Core Identity altyapısı
-- Güvenli parola hashleme
-- Benzersiz e-posta kontrolü
-- Kullanıcı profil yönetimi
-- Profil fotoğrafı desteği
-- Aktif / pasif kullanıcı sistemi
-- Rol tabanlı yetkilendirme
-- Admin ve User rolleri
-- Özelleştirilmiş Identity doğrulama mesajları
-
-Parola politikası:
-
-- Minimum 8 karakter
-- En az bir büyük harf
-- En az bir küçük harf
-- En az bir rakam
-- En az bir özel karakter
+Yönetim paneli üzerinden kullanıcılar, roller, mesaj şikayetleri ve şifre sıfırlama talepleri merkezi olarak yönetilebilir.
 
 ---
 
-## ✉️ Mesajlaşma Sistemi
+## Özellikler
 
-Kullanıcılar sistem içerisindeki diğer kullanıcılara mesaj gönderebilir.
+### Mesaj Yönetimi
 
-Desteklenen temel işlemler:
-
-- Yeni mesaj oluşturma
 - Gelen kutusu
-- Gönderilen mesajlar
-- Mesaj detay ekranı
-- Mesaja yanıt verme
-- Mesaj kategorileri
-- Gönderen ve alıcı bilgileri
-- Mesaj gönderim tarihi
-- Okundu / okunmadı durumu
-- Mesaj önizleme
+- Mesaj gönderme
+- Gönderilen mesajları görüntüleme
+- Mesaj detaylarını görüntüleme
+- Mesaj yanıtlama
+- Taslak oluşturma ve düzenleme
+- Mesajları önemli olarak işaretleme
+- Mesajları çöp kutusuna taşıma
 - Mesaj arama
+- Tarihe göre filtreleme
+- Kategoriye göre filtreleme
+- Okunma durumuna göre filtreleme
+- Önemli mesajlara göre filtreleme
+- Mesaj sıralama
 
----
+### Mesaj Şikayet Sistemi
 
-## 📝 Taslak Sistemi
+Kullanıcılar şüpheli veya uygunsuz olduğunu düşündükleri mesajları sistem yöneticilerine bildirebilir.
 
-Tamamlanmamış mesajlar taslak olarak saklanabilir.
+Şikayet oluşturulurken:
 
-- Taslak oluşturma
-- Taslakları listeleme
-- Taslağı tekrar düzenleme
-- Taslağı gönderme
-- Taslak güncelleme tarihi
-- Taslakların normal mesaj istatistiklerinden ayrılması
+- Şikayet nedeni seçilebilir
+- Ek açıklama girilebilir
+- Aynı mesaj için tekrar şikayet oluşturulması engellenebilir
+- Kullanıcı kendi oluşturduğu şikayetleri görüntüleyebilir
+- Şikayetin inceleme durumu takip edilebilir
 
----
+Yöneticiler gelen şikayetleri yönetim panelinden inceleyebilir ve durumlarını güncelleyebilir.
 
-## ⭐ Önemli Mesajlar
+Şikayet durumları örnek olarak:
 
-Kullanıcılar gelen mesajlarını önemli olarak işaretleyebilir.
-
-- Mesajı önemli olarak işaretleme
-- Önemli işaretini kaldırma
-- Önemli mesajları ayrı ekranda görüntüleme
-- Yıldız göstergesi
-
----
-
-## 📥 Gelen Kutusu
-
-Gelen kutusunda mesajlar farklı kriterlere göre yönetilebilir.
-
-### Filtreleme
-
-- Tüm mesajlar
-- Okunan mesajlar
-- Okunmayan mesajlar
-- Önemli mesajlar
-- Kategori
-- Gönderen
-- Konu
-- Tarih aralığı
-
-Birden fazla filtre birlikte kullanılabilir.
-
-### Sıralama
-
-- Yeniden eskiye
-- Eskiden yeniye
-
-### Sayfalama
-
-Mesaj listeleri EF Core üzerinden backend tarafında sayfalanmaktadır.
-
-```csharp
-.Skip((page - 1) * pageSize)
-.Take(pageSize)
-```
-
-Bu sayede büyük mesaj listelerinin tamamının tek seferde yüklenmesi engellenir.
-
----
-
-## 🗑️ Çöp Kutusu
-
-Mesajlar doğrudan fiziksel olarak veritabanından silinmek yerine kullanıcı bazlı olarak çöp kutusuna taşınabilir.
-
-Desteklenen işlemler:
-
-- Gelen mesajı çöp kutusuna taşıma
-- Gönderilen mesajı çöp kutusuna taşıma
-- Çöp kutusundaki mesajları görüntüleme
-- Mesajı geri yükleme
-- Gönderen ve alıcı için ayrı silinme durumları
-
-Bu yapı sayesinde bir kullanıcının mesajı silmesi diğer kullanıcının mesajını otomatik olarak kaldırmaz.
-
----
-
-# 🚩 Mesaj Şikayet Sistemi
-
-Kullanıcılar uygunsuz veya şüpheli mesajları yöneticilere bildirebilir.
-
-### Şikayet nedenleri
-
-- Spam
-- Taciz
-- Uygunsuz içerik
-- Dolandırıcılık / şüpheli içerik
-- Diğer
-
-Bir kullanıcı aynı mesaj için yalnızca bir kez şikayet oluşturabilir.
-
-Şikayet içerisinde:
-
-- Şikayet eden kullanıcı
-- Mesaj
-- Şikayet nedeni
-- Açıklama
-- Oluşturulma tarihi
-- İnceleme durumu
-
-saklanmaktadır.
-
-### Şikayet Durumları
-
-Şikayetler yönetici tarafından farklı durumlara alınabilir:
-
-- Bekliyor
+- İnceleme Bekliyor
 - İnceleniyor
 - İşlem Yapıldı
 - Reddedildi
 
-Kullanıcı kendi oluşturduğu şikayetlerin güncel durumunu **Şikayetlerim** ekranından takip edebilir.
+---
+
+## Yönetim Paneli
+
+Admin rolüne sahip kullanıcılar için ayrı yönetim özellikleri bulunmaktadır.
+
+Yönetim paneli üzerinden:
+
+- Kullanıcılar görüntülenebilir
+- Kullanıcı hesapları aktif/pasif hale getirilebilir
+- Sistem rolleri yönetilebilir
+- Kullanıcılara rol atanabilir
+- Kullanıcılardan roller kaldırılabilir
+- Yeni roller oluşturulabilir
+- Roller silinebilir
+- Mesaj şikayetleri incelenebilir
+- Şikayet durumları güncellenebilir
+- Şifre sıfırlama talepleri yönetilebilir
 
 ---
 
-# 🔑 Şifre Sıfırlama Talep Sistemi
+## Rol ve Yetkilendirme
 
-IdentityMail, şirket içi kullanım senaryosuna uygun olarak yönetici kontrollü bir şifre sıfırlama sistemi içerir.
+IdentityMail, **ASP.NET Core Identity** altyapısını kullanmaktadır.
 
-Sistem harici bir e-posta servisine bağımlı olmak zorunda değildir.
+Sistemde rol tabanlı yetkilendirme uygulanmıştır.
 
-### Kullanıcı Akışı
+Temel roller:
+
+| Rol | Yetki |
+|---|---|
+| `User` | Mesajlaşma ve standart kullanıcı işlemleri |
+| `Admin` | Yönetim paneli ve sistem yönetimi |
+
+Admin kullanıcıları sistem içerisindeki kullanıcı ve rol yönetimi işlemlerini gerçekleştirebilir.
+
+---
+
+## Şifre Sıfırlama Sistemi
+
+IdentityMail, kurum içi kullanım senaryosuna uygun yönetici kontrollü bir şifre sıfırlama mekanizmasına sahiptir.
+
+Süreç aşağıdaki şekilde çalışır:
 
 ```text
 Kullanıcı
-   ↓
+   │
+   ▼
 Şifremi Unuttum
-   ↓
+   │
+   ▼
 E-posta adresini girer
-   ↓
+   │
+   ▼
 Şifre sıfırlama talebi oluşturulur
-   ↓
-Talep Admin Paneline gönderilir
-```
-
-### Yönetici Akışı
-
-```text
+   │
+   ▼
 Admin Paneli
-   ↓
-Şifre Talepleri
-   ↓
-Kullanıcı talebini görüntüler
-   ↓
-Şifreyi Sıfırla
-   ↓
-Geçici / yeni şifre belirler
-   ↓
-ASP.NET Core Identity şifreyi günceller
-   ↓
-Talep tamamlandı olarak işaretlenir
+   │
+   ▼
+Yönetici talebi inceler
+   │
+   ▼
+Geçici / yeni parola belirlenir
+   │
+   ▼
+Kullanıcı yeni parolasıyla giriş yapar
 ```
 
-Şifre değiştirme işlemi ASP.NET Core Identity'nin token mekanizması üzerinden gerçekleştirilir.
-
-```csharp
-var token =
-    await _userManager
-        .GeneratePasswordResetTokenAsync(user);
-
-var result =
-    await _userManager.ResetPasswordAsync(
-        user,
-        token,
-        newPassword);
-```
+Bu yapı sayesinde harici bir e-posta servisine ihtiyaç duyulmadan kurum içi şifre sıfırlama süreci yönetilebilir.
 
 ---
 
-# 🛡️ Admin Paneli
+## Kullanıcı Hesap Yönetimi
 
-Admin rolüne sahip kullanıcılar sistem yönetim paneline erişebilir.
+Kullanıcı hesapları yöneticiler tarafından kontrol edilebilir.
 
-Admin paneli normal kullanıcılardan rol bazlı olarak ayrılmıştır.
+Bir hesap pasif duruma getirildiğinde kullanıcı sisteme giriş yapamaz.
 
-```csharp
-[Authorize(Roles = "Admin")]
-```
+Bu özellik özellikle:
 
-## 📊 Dashboard
+- Kurumdan ayrılan çalışanların hesaplarının kapatılması
+- Geçici hesap engelleme
+- Yönetici kontrollü kullanıcı erişimi
 
-Dashboard üzerinden sistem genelindeki istatistikler görüntülenebilir.
-
-- Toplam kullanıcı sayısı
-- Aktif kullanıcı sayısı
-- Toplam gönderilen mesaj
-- Bugün gönderilen mesaj
-- Okunmamış mesaj sayısı
-- Çöp kutusundaki mesaj sayısı
-- En fazla mesaj gönderen kullanıcılar
-- En çok kullanılan kategoriler
+gibi senaryolar için kullanılabilir.
 
 ---
 
-# 👥 Kullanıcı Yönetimi
-
-Yöneticiler sistemde kayıtlı kullanıcıları yönetebilir.
-
-### Özellikler
-
-- Kullanıcıları listeleme
-- Kullanıcı adına göre arama
-- Ad / soyada göre arama
-- E-posta adresine göre arama
-- Kullanıcıyı aktif yapma
-- Kullanıcıyı pasif yapma
-- Kullanıcının rollerini görüntüleme
-- Kullanıcıya Admin rolü verme
-- Admin rolünü kaldırma
-
-Pasif hale getirilen kullanıcıların sisteme erişimi engellenebilir.
-
-Yönetici güvenliği açısından admin kullanıcısının kendi hesabını yanlışlıkla pasif hale getirmesi engellenmiştir.
-
----
-
-# 🛡️ Rol Yönetimi
-
-Sistem dinamik rol yönetimini desteklemektedir.
-
-Yönetici:
-
-- Yeni rol oluşturabilir
-- Rol silebilir
-- Kullanıcıya rol atayabilir
-- Kullanıcıdan rol kaldırabilir
-- Kullanıcının mevcut rollerini görüntüleyebilir
-
-Sistemin temel rolleri:
-
-```text
-Admin
-User
-```
-
-`Admin` ve `User` rolleri uygulama başlatılırken kontrol edilir ve bulunmuyorsa otomatik olarak oluşturulur.
-
-Temel rollerin yanlışlıkla silinmesine karşı koruma bulunmaktadır.
-
----
-
-# 🚩 Admin Şikayet Yönetimi
-
-Yöneticiler kullanıcılar tarafından gönderilen mesaj şikayetlerini merkezi bir ekrandan inceleyebilir.
-
-Yönetici:
-
-- Şikayet eden kullanıcıyı görüntüleyebilir
-- Şikayet edilen mesajı görüntüleyebilir
-- Mesaj gönderen kullanıcıyı görebilir
-- Mesaj alıcısını görebilir
-- Şikayet nedenini inceleyebilir
-- Kullanıcının açıklamasını okuyabilir
-- Şikayet durumunu değiştirebilir
-
-İnceleme sırasında yönetici bilgisi ve inceleme tarihi sistem tarafından saklanabilir.
-
----
-
-# 🔐 Güvenlik
-
-Projede ASP.NET Core Identity kullanılmaktadır.
-
-Uygulanan güvenlik mekanizmalarından bazıları:
-
-- Password hashing
-- Role-based authorization
-- Authentication cookies
-- Anti-forgery token kontrolü
-- Unique e-mail kontrolü
-- Identity password validation
-- Admin endpoint koruması
-- Kullanıcı aktif / pasif kontrolü
-- Yetkisiz admin erişiminin engellenmesi
-- Identity password reset token sistemi
-
-POST işlemlerinde:
-
-```csharp
-[ValidateAntiForgeryToken]
-```
-
-kullanılarak CSRF saldırılarına karşı koruma sağlanmaktadır.
-
----
-
-# 🛠️ Kullanılan Teknolojiler
+## Kullanılan Teknolojiler
 
 | Teknoloji | Kullanım |
 |---|---|
 | ASP.NET Core MVC | Web uygulama altyapısı |
 | C# | Backend geliştirme |
-| ASP.NET Core Identity | Authentication ve Authorization |
-| Entity Framework Core | ORM |
+| Entity Framework Core | ORM ve veri erişimi |
 | SQL Server | Veritabanı |
-| LINQ | Veri sorgulama |
-| Razor Views | UI oluşturma |
+| ASP.NET Core Identity | Authentication ve Authorization |
+| Razor Views | Kullanıcı arayüzü |
 | HTML5 | Sayfa yapısı |
 | CSS3 | Arayüz tasarımı |
-| JavaScript | İstemci tarafı işlemler |
-| Bootstrap Icons | İkonlar |
+| Bootstrap Icons | İkon sistemi |
 
 ---
 
-# 📁 Proje Yapısı
+## Proje Yapısı
+
+Projenin temel klasör yapısı aşağıdaki gibidir:
 
 ```text
-IdentityMail.Web
+IdentityMail.Web/
 │
-├── Bağımlılıklar
-├── Connected Services
-├── Properties
+├── Context/
+│   └── Veritabanı ve DbContext yapılandırmaları
 │
-├── wwwroot
-│   ├── css
-│   ├── js
-│   └── images
+├── Controllers/
+│   └── MVC controller sınıfları
 │
-├── Context
-│   └── AppDbContext.cs
+├── CustomValidation/
+│   └── Identity doğrulama ve özel hata mesajları
 │
-├── Controllers
-│   ├── AuthController.cs
-│   ├── MessageController.cs
-│   └── AdminController.cs
+├── DTOs/
+│   └── Veri transfer modelleri
 │
-├── CustomValidation
-│   └── CustomErrorDescriber.cs
+├── Entities/
+│   └── Veritabanı entity sınıfları
 │
-├── DTOs
-│   ├── AdminDtos
-│   └── UserDtos
+├── Helpers/
+│   └── Yardımcı sınıflar ve extension metotları
 │
-├── Entities
-│   ├── AppUser.cs
-│   ├── AppRole.cs
-│   ├── UserMessage.cs
-│   ├── MessageReport.cs
-│   └── PasswordResetRequest.cs
+├── Migrations/
+│   └── Entity Framework Core migration dosyaları
 │
-├── Helpers
+├── Models/
+│   └── Uygulama modelleri
 │
-├── Migrations
+├── Views/
+│   ├── Admin/
+│   ├── Auth/
+│   ├── Message/
+│   ├── Profile/
+│   └── Shared/
 │
-├── Models
-│
-├── Views
-│   ├── Admin
-│   ├── Auth
-│   ├── Message
-│   ├── Shared
-│   └── ...
+├── wwwroot/
+│   ├── css/
+│   ├── js/
+│   └── images/
 │
 ├── appsettings.json
 ├── Program.cs
@@ -412,231 +203,268 @@ IdentityMail.Web
 
 ---
 
-# 🗄️ Veritabanı
+## Mimari
 
-Proje Entity Framework Core Code First yaklaşımını kullanmaktadır.
-
-Başlıca veri yapıları:
+Uygulama ASP.NET Core MVC mimarisi üzerine geliştirilmiştir.
 
 ```text
-AspNetUsers
-AspNetRoles
-AspNetUserRoles
-
-UserMessages
-MessageReports
-PasswordResetRequests
+                    ┌─────────────────┐
+                    │      User       │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │   Razor Views   │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │   Controllers   │
+                    └────────┬────────┘
+                             │
+                 ┌───────────┴───────────┐
+                 ▼                       ▼
+        ┌─────────────────┐     ┌─────────────────┐
+        │      DTOs       │     │ ASP.NET Identity│
+        └────────┬────────┘     └────────┬────────┘
+                 │                       │
+                 └───────────┬───────────┘
+                             ▼
+                    ┌─────────────────┐
+                    │ Entity Framework│
+                    │      Core       │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │   SQL Server    │
+                    └─────────────────┘
 ```
-
-Identity tabloları kullanıcı ve rol yönetimini sağlarken uygulamaya özel tablolar mesajlaşma ve yönetim özelliklerini saklamaktadır.
 
 ---
 
-# ⚙️ Kurulum
+## Veritabanı Yapısı
 
-## 1. Repository'yi klonlayın
+Uygulamada Entity Framework Core Code First yaklaşımı kullanılmaktadır.
+
+Temel veri yapıları arasında:
+
+- Kullanıcılar
+- Roller
+- Kullanıcı-Rol ilişkileri
+- Kullanıcı mesajları
+- Mesaj şikayetleri
+- Şifre sıfırlama talepleri
+
+bulunmaktadır.
+
+ASP.NET Core Identity tabloları kullanıcı kimlik doğrulama ve yetkilendirme işlemleri için kullanılmaktadır.
+
+---
+
+## Kurulum
+
+### 1. Repository'yi Klonlayın
 
 ```bash
 git clone <repository-url>
 ```
 
-Proje klasörüne geçin:
+Ardından proje dizinine geçin:
 
 ```bash
 cd IdentityMailProject/IdentityMail.Web
 ```
 
----
+### 2. NuGet Paketlerini Yükleyin
 
-## 2. Connection String
+```bash
+dotnet restore
+```
 
-`appsettings.json` içerisinde SQL Server bağlantınızı yapılandırın.
+### 3. Veritabanı Bağlantısını Yapılandırın
 
-Örnek:
+`appsettings.json` içerisindeki connection string değerini kendi SQL Server ortamınıza göre yapılandırın.
+
+Örnek yapı:
 
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=YOUR_SERVER;Database=IdentityMailProjectDB;Trusted_Connection=True;TrustServerCertificate=True;"
+    "DefaultConnection": "YOUR_SQL_SERVER_CONNECTION_STRING"
   }
 }
 ```
 
-> Gerçek kullanıcı adı, parola, production connection string veya diğer gizli bilgileri GitHub repository'sine eklemeyin.
-
-Production ortamlarında Secret Manager veya environment variable kullanılması önerilir.
-
----
-
-## 3. Veritabanını oluşturun
+### 4. Migration'ları Uygulayın
 
 ```bash
 dotnet ef database update
 ```
 
-EF Core mevcut migration'ları SQL Server veritabanına uygular.
-
----
-
-## 4. Projeyi derleyin
-
-```bash
-dotnet build
-```
-
----
-
-## 5. Uygulamayı çalıştırın
+### 5. Uygulamayı Çalıştırın
 
 ```bash
 dotnet run
 ```
 
+Uygulama başlatıldıktan sonra terminalde gösterilen localhost adresi üzerinden erişilebilir.
+
 ---
 
-# 🔑 Identity Yapılandırması
+## Gereksinimler
 
-Uygulamada Identity şu temel yapı ile kullanılmaktadır:
+Projeyi yerel geliştirme ortamında çalıştırmak için aşağıdaki bileşenler gereklidir:
 
-```csharp
-builder.Services
-    .AddIdentity<AppUser, AppRole>(options =>
-    {
-        options.User.RequireUniqueEmail = true;
+- .NET SDK
+- SQL Server
+- Entity Framework Core CLI
+- Visual Studio / Visual Studio Code / Rider
+- Modern bir web tarayıcısı
 
-        options.Password.RequireDigit = true;
-        options.Password.RequireLowercase = true;
-        options.Password.RequireUppercase = true;
-        options.Password.RequireNonAlphanumeric = true;
-        options.Password.RequiredLength = 8;
-    })
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
+Entity Framework Core CLI kurulu değilse:
+
+```bash
+dotnet tool install --global dotnet-ef
 ```
 
-`AddDefaultTokenProviders()` şifre sıfırlama gibi Identity token işlemlerinin kullanılmasını sağlar.
+---
+
+## Ekran Görüntüleri
+
+Projenin temel ekranları bu bölüm altında gösterilebilir.
+
+### Giriş
+
+![Giriş Ekranı](docs/screenshots/login.png)
+
+### Gelen Kutusu
+
+![Gelen Kutusu](docs/screenshots/inbox.png)
+
+### Mesaj Gönderme
+
+![Mesaj Gönderme](docs/screenshots/send-message.png)
+
+### Mesaj Detayı
+
+![Mesaj Detayı](docs/screenshots/message-detail.png)
+
+### Şikayetlerim
+
+![Şikayetlerim](docs/screenshots/my-reports.png)
+
+### Admin Paneli
+
+![Admin Paneli](docs/screenshots/admin-dashboard.png)
+
+### Şikayet Yönetimi
+
+![Şikayet Yönetimi](docs/screenshots/admin-reports.png)
+
+### Kullanıcı Yönetimi
+
+![Kullanıcı Yönetimi](docs/screenshots/admin-users.png)
+
+### Rol Yönetimi
+
+![Rol Yönetimi](docs/screenshots/admin-roles.png)
+
+### Şifre Sıfırlama Talepleri
+
+![Şifre Talepleri](docs/screenshots/password-reset-requests.png)
 
 ---
 
-# 🧱 Mimari Yaklaşım
+## Ekran Görüntüsü Klasör Yapısı
 
-Proje klasik ASP.NET Core MVC yapısını kullanmaktadır.
+Repository içerisinde ekran görüntülerini aşağıdaki şekilde saklayabilirsiniz:
 
 ```text
-Request
-   ↓
-Controller
-   ↓
-DTO / Entity
-   ↓
-Entity Framework Core
-   ↓
-SQL Server
-   ↓
-Controller
-   ↓
-Razor View
-   ↓
-Response
+IdentityMailProject/
+│
+├── docs/
+│   └── screenshots/
+│       ├── login.png
+│       ├── inbox.png
+│       ├── send-message.png
+│       ├── message-detail.png
+│       ├── my-reports.png
+│       ├── admin-dashboard.png
+│       ├── admin-reports.png
+│       ├── admin-users.png
+│       ├── admin-roles.png
+│       └── password-reset-requests.png
+│
+├── IdentityMail.Web/
+│
+└── README.md
 ```
-
-Controller'lar HTTP isteklerini yönetirken Entity Framework Core veritabanı erişimini sağlar.
-
-DTO yapısı özellikle kullanıcı ve admin ekranlarında Entity sınıflarının doğrudan View tarafına taşınmasını azaltmak amacıyla kullanılmaktadır.
 
 ---
 
-# 📌 Temel Modüller
+## Temel İş Akışı
 
 ```text
-IdentityMail
-│
-├── Authentication
-│   ├── Register
-│   ├── Login
-│   ├── Logout
-│   └── Forgot Password
-│
-├── Messaging
-│   ├── Inbox
-│   ├── Sent
-│   ├── Drafts
-│   ├── Important
-│   ├── Reply
-│   ├── Search / Filter
-│   └── Trash
-│
-├── Reports
-│   ├── Report Message
-│   ├── My Reports
-│   └── Report Status
-│
-└── Administration
-    ├── Dashboard
-    ├── User Management
-    ├── Role Management
-    ├── Report Management
-    └── Password Reset Requests
+                        IdentityMail
+                             │
+              ┌──────────────┴──────────────┐
+              │                             │
+            USER                          ADMIN
+              │                             │
+      ┌───────┼────────┐          ┌─────────┼──────────┐
+      │       │        │          │         │          │
+   Mesaj    Taslak  Şikayet   Kullanıcı   Roller   Şikayetler
+      │       │        │       Yönetimi   Yönetimi     │
+      │       │        │                              │
+      └───────┴────────┘                              │
+              │                                       │
+              └──────────► SQL Server ◄───────────────┘
 ```
 
 ---
 
-# 🎯 Projenin Amacı
+## Öne Çıkan Uygulama Özellikleri
 
-IdentityMail'in temel amacı yalnızca basit bir mesaj gönderme uygulaması oluşturmak değil; ASP.NET Core ekosistemindeki önemli backend geliştirme konularını gerçekçi bir **kurum içi mesajlaşma senaryosu** üzerinden uygulamaktır.
+IdentityMail yalnızca temel CRUD işlemlerinden oluşan bir uygulama değildir. Projede gerçek bir kurum içi mesajlaşma senaryosuna yönelik farklı iş süreçleri birlikte ele alınmıştır.
 
-Proje özellikle aşağıdaki konular üzerine yoğunlaşmaktadır:
+Bunlardan bazıları:
 
-- ASP.NET Core MVC mimarisi
-- ASP.NET Core Identity
-- Authentication
-- Authorization
-- Role Management
-- Entity Framework Core
-- LINQ sorguları
-- Code First yaklaşımı
-- Migration yönetimi
-- DTO kullanımı
-- Admin panel geliştirme
-- Kullanıcı yönetimi
-- Mesaj yönetimi
-- Soft delete yaklaşımı
-- Arama, filtreleme ve sayfalama
-- Şikayet / moderasyon sistemi
+- Authentication ve Authorization
+- Role-based Access Control
+- Kullanıcı durum yönetimi
+- Mesaj yaşam döngüsü yönetimi
+- Taslak sistemi
+- Çöp kutusu sistemi
+- Önemli mesaj sistemi
+- Gelişmiş mesaj filtreleme
+- Şikayet ve moderasyon sistemi
+- Kullanıcı şikayet durum takibi
 - Yönetici kontrollü şifre sıfırlama
+- Entity Framework Core migration yönetimi
+- Responsive yönetim ve kullanıcı arayüzleri
 
 ---
 
-# 🔮 Geliştirilebilecek Özellikler
+## Geliştirme Durumu
 
-Projenin ilerleyen sürümlerinde aşağıdaki özellikler eklenebilir:
+IdentityMail aktif olarak geliştirilebilecek şekilde tasarlanmıştır.
 
-- İlk girişte zorunlu şifre değiştirme
-- Departman sistemi
-- Kullanıcı grupları
-- Toplu mesaj gönderme
-- Dosya / belge ekleri
+İlerleyen sürümlerde aşağıdaki özellikler eklenebilir:
+
+- Dosya ve belge ekleri
 - Mesaj bildirim sistemi
+- Departman bazlı kullanıcı grupları
+- Toplu mesaj gönderimi
+- Gelişmiş yönetim raporları
+- Audit log sistemi
+- Mesaj arşivleme
 - Gerçek zamanlı bildirimler
 - SignalR entegrasyonu
-- Gelişmiş audit log sistemi
-- Admin işlem geçmişi
-- Mesaj arşivleme
-- Dashboard grafiklerinin genişletilmesi
-- Kullanıcı oturum geçmişi
-- İki faktörlü kimlik doğrulama
 - Kurumsal LDAP / Active Directory entegrasyonu
 
 ---
 
-# 📄 Lisans
+## Lisans
 
-Bu proje eğitim, portföy ve geliştirme amaçlı hazırlanmıştır.
-
----
-
-## 📬 IdentityMail
-
-**ASP.NET Core MVC • Identity • Entity Framework Core • SQL Server**
-
-Rol tabanlı yetkilendirme, mesaj yönetimi, kullanıcı yönetimi, şikayet sistemi ve yönetici kontrollü şifre sıfırlama özelliklerine sahip şirket içi mesajlaşma uygulaması.
+Bu proje eğitim, geliştirme ve portföy amaçlı bir ASP.NET Core MVC uygulamasıdır.
